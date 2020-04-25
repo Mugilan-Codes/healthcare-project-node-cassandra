@@ -25,7 +25,7 @@ const initDB = async () => {
     console.log('admin Table Created');
 
     const createPatientSignUpTable =
-      'CREATE TABLE IF NOT EXISTS patient_sign_up ( email varchar PRIMARY KEY, addr varchar, dob date, gender text, name text, phno int, pwd varchar, repwd varchar ) ;';
+      'CREATE TABLE IF NOT EXISTS patient_sign_up ( email varchar PRIMARY KEY, addr varchar, dob date, gender text, name text, phno int, pwd varchar ) ;';
     await client.execute(createPatientSignUpTable);
     console.log('patient_sign_up Table Created');
 
@@ -58,6 +58,23 @@ const initDB = async () => {
       'CREATE TABLE IF NOT EXISTS feedback ( id uuid, name text, email varchar, revmsg varchar, exp varchar, response varchar, support varchar, satisfac map<text,int>, rating int, extfeed varchar, PRIMARY KEY ( id, name ) ) ;';
     await client.execute(createFeedbackTable);
     console.log('feedback Table Created');
+
+    const admins = [
+      {
+        query: 'INSERT INTO admin ( email, name, pwd ) values( ?, ?, ? ) ;',
+        params: ['mugilan@health.com', 'Mugilan', 'mugilan'],
+      },
+      {
+        query: 'INSERT INTO admin ( email, name, pwd ) values( ?, ?, ? ) ;',
+        params: ['nive@health.com', 'Nivethithaa', 'nive'],
+      },
+      {
+        query: 'INSERT INTO admin ( email, name, pwd ) values( ?, ?, ? ) ;',
+        params: ['sasi@health.com', 'Sasi Kiran', 'sasi'],
+      },
+    ];
+    await client.batch(admins, { prepare: true });
+    console.log('admins added - Mugilan, Nive, Sasi');
   } catch (err) {
     console.error(err.message);
     process.exit(1);

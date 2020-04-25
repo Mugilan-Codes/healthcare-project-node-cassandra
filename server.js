@@ -4,6 +4,8 @@ const app = express();
 const initDB = require('./initDB');
 initDB();
 
+app.use(express.json({ extended: false }));
+
 app.get('/', (req, res) => res.send('API Running...'));
 
 // Define Routes
