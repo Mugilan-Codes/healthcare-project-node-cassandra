@@ -1,7 +1,6 @@
 const cassandra = require('cassandra-driver');
 const express = require('express');
 const router = express.Router();
-
 const uuid = cassandra.types.Uuid;
 
 const client = new cassandra.Client({
@@ -14,8 +13,8 @@ client.connect();
 // @route   GET api/health
 // @desc    Test Route
 // @access  Public
-router.get('/', (req, res) => {
-  res.send('Api Health Route');
+router.get('/', async (req, res) => {
+  res.send('Test Route');
 });
 
 // @route   POST api/health/register
@@ -42,6 +41,27 @@ router.post('/register', async (req, res) => {
     ];
     await client.batch(registerQueries, { prepare: true });
     res.send('Patient Registered');
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   POST api/health/login
+// @desc    Login Patient
+// @access  Public
+router.post('/login', async (req, res) => {
+  const { email, pwd } = req.body;
+  try {
+    const query = `SELECT * FROM patient_sign_in WHERE email = ?`;
+    const getPwd = await (
+      await client.execute(query, [email], { prepare: true })
+    ).rows[0].pwd;
+
+    if (getPwd !== pwd) {
+      return res.json('User Not Found');
+    }
+    res.json(getPwd);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
