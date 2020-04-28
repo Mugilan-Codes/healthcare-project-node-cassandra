@@ -151,6 +151,9 @@ router.post(
 // @access  Private
 router.get('/patient', auth, async (req, res) => {
   try {
+    const getAllDoctors = (
+      await client.execute('SELECT d_name, spec FROM doctor')
+    ).rows;
     const patient = (
       await client.execute(
         'SELECT * FROM patient WHERE email = ?',
@@ -158,7 +161,7 @@ router.get('/patient', auth, async (req, res) => {
         { prepare: true }
       )
     ).rows[0];
-    res.json(patient);
+    res.json({ patient, getAllDoctors });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
