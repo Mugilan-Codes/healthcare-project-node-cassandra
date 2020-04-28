@@ -105,22 +105,49 @@ router.get('/patient', auth, async (req, res) => {
 // @route   POST api/health/patient/login
 // @desc    Login Patient
 // @access  Public
-router.post('/patient/login', async (req, res) => {
-  const { email, pwd } = req.body;
-  try {
-    const query = `SELECT * FROM patient_sign_in WHERE email = ?`;
-    const getPwd = await (
-      await client.execute(query, [email], { prepare: true })
-    ).rows[0].pwd;
-
-    if (getPwd !== pwd) {
-      return res.json('User Not Found');
+router.post(
+  '/patient/login',
+  [
+    check('email', 'Please Include Email').isEmail(),
+    check('pwd', 'Password is Required').exists(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
-    res.json(getPwd);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+
+    const { email, pwd } = req.body;
+    try {
+      const getPatientDetail = (
+        await client.execute('SELECT * FROM patient WHERE email = ?', [email], {
+          prepare: true,
+        })
+      ).rows[0];
+
+      const isPatientNotExist =
+        typeof getPatientDetail === 'undefined' ||
+        getPatientDetail.email !== email;
+
+      if (isPatientNotExist) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'Invalid Credentials' }] });
+      }
+
+      const getPwd = getPatientDetail.pwd;
+      if (getPwd !== pwd) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'Invalid Credentials' }] });
+      }
+
+      res.json({ token: getPatientDetail.id });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
   }
-});
+);
 
 module.exports = router;
