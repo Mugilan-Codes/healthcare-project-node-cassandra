@@ -15,9 +15,13 @@ module.exports = async (req, res, next) => {
 
   try {
     const decoded = (
-      await client.execute('SELECT * FROM admin WHERE email = ?', [token], {
-        prepare: true,
-      })
+      await client.execute(
+        'SELECT * FROM admin WHERE id = ? ALLOW FILTERING',
+        [token],
+        {
+          prepare: true,
+        }
+      )
     ).rows[0];
     // console.log(`decoded = ${JSON.stringify(decoded)}`);
     req.email = decoded.email;

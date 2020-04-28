@@ -1,4 +1,5 @@
 const cassandra = require('cassandra-driver');
+const uuid = cassandra.types.Uuid;
 
 const initDB = async () => {
   try {
@@ -20,22 +21,9 @@ const initDB = async () => {
     // console.log('Use healthcare Keyspace');
 
     const createAdminTable =
-      'CREATE TABLE IF NOT EXISTS admin ( name text, email varchar PRIMARY KEY, pwd varchar ) ;';
+      'CREATE TABLE IF NOT EXISTS admin ( id uuid, name text, email varchar PRIMARY KEY, pwd varchar ) ;';
     await client.execute(createAdminTable);
     // console.log('admin Table Created');
-
-    // const createPatientSignUpTable =
-    //   'CREATE TABLE IF NOT EXISTS patient_sign_up ( email varchar PRIMARY KEY, addr varchar, dob date, gender text, name text, phno int, pwd varchar ) ;';
-    // await client.execute(createPatientSignUpTable);
-    // console.log('patient_sign_up Table Created');
-    // const createPatientSignInTable =
-    //   'CREATE TABLE IF NOT EXISTS patient_sign_in ( email varchar PRIMARY KEY, pwd varchar ) ;';
-    // await client.execute(createPatientSignInTable);
-    // console.log('patient_sign_in Table Created');
-    // const createPatientIDTable =
-    //   'CREATE TABLE IF NOT EXISTS patient_id ( name text, id uuid, PRIMARY KEY ( name, id ) ) ;';
-    // await client.execute(createPatientIDTable);
-    // console.log('patient_id Table Created');
 
     const createPatientTable =
       'CREATE TABLE IF NOT EXISTS patient ( id uuid, name text, email varchar, addr varchar, dob date, gender text, phno int, pwd varchar, PRIMARY KEY ( email, id ) ) ;';
@@ -82,7 +70,19 @@ const initDB = async () => {
       },
     ];
     await client.batch(admins, { prepare: true });
-    console.log('admins added - Mugilan, Nive, Sasi');
+
+    for (let i = 0; i < Object.keys(admins).length; i++) {
+      let getAdmin = (await client.execute('SELECT * FROM admin')).rows[i];
+      // console.log(getAdmin.id);
+      if (getAdmin.id === null) {
+        await client.execute(
+          'UPDATE admin SET id = ? WHERE email = ?',
+          [uuid.random(), getAdmin.email],
+          { prepare: true }
+        );
+      }
+    }
+    // console.log('admins added - Mugilan, Nive, Sasi');
   } catch (err) {
     console.error(err.message);
     process.exit(1);
