@@ -212,4 +212,59 @@ router.post(
   }
 );
 
+// @route   POST api/health/doctor/register
+// @desc    Register Doctor
+// @access  Public
+router.post(
+  '/doctor/register',
+  [
+    check('d_name', 'Doctor Name is required').not().isEmpty(),
+    check('spec', 'Specialization of the Doctor is required').not().isEmpty(),
+    check('email', 'Please Include a Email').isEmail(),
+    check('pwd', 'Password must be atleast 6 characters long').isLength({
+      min: 6,
+    }),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { d_name, spec, email, pwd } = req.body;
+    try {
+      const d_id = uuid.random();
+
+      const getDoctorDetail = (
+        await client.execute('SELECT * FROM doctor WHERE email = ?', [email], {
+          prepare: true,
+        })
+      ).rows[0];
+      const isDoctorNotExist =
+        typeof getDoctorDetail === 'undefined' ||
+        getDoctorDetail.email !== email;
+
+      if (!isDoctorNotExist) {
+        return res.status(400).json({ errors: [{ msg: 'Doctor Exists' }] });
+      }
+
+      const registerDoctor =
+        'INSERT INTO doctor ( d_id, d_name, spec, email, pwd ) VALUES ( ?, ?, ?, ?, ? ) ;';
+      const params = [d_id, d_name, spec, email, pwd];
+      await client.execute(registerDoctor, params, { prepare: true });
+
+      const returnId = (
+        await client.execute('SELECT * FROM doctor WHERE email = ?', [email], {
+          prepare: true,
+        })
+      ).rows[0].d_id;
+
+      res.json({ token: returnId });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
 module.exports = router;
