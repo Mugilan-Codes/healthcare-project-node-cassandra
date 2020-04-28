@@ -13,6 +13,7 @@ client.connect();
 
 const admin = require('../../middleware/admin');
 const auth = require('../../middleware/auth');
+const doctor = require('../../middleware/doctor');
 
 // @route   GET api/health
 // @desc    Test Route
@@ -260,6 +261,73 @@ router.post(
       ).rows[0].d_id;
 
       res.json({ token: returnId });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
+// @route   GET api/health/doctor
+// @desc    Get Auth Doctor
+// @access  Private
+router.get('/doctor', doctor, async (req, res) => {
+  try {
+    const doctor = (
+      await client.execute(
+        'SELECT * FROM doctor WHERE email = ?',
+        [req.email],
+        { prepare: true }
+      )
+    ).rows[0];
+    res.json(doctor);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   POST api/health/doctor/login
+// @desc    Login Doctor
+// @access  Public
+router.post(
+  '/doctor/login',
+  [
+    check('email', 'Please Include Email').isEmail(),
+    check('pwd', 'Password is Required').exists(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email, pwd } = req.body;
+    try {
+      const getDoctorDetail = (
+        await client.execute('SELECT * FROM doctor WHERE email = ?', [email], {
+          prepare: true,
+        })
+      ).rows[0];
+
+      const isNotDoctor =
+        typeof getDoctorDetail === 'undefined' ||
+        getDoctorDetail.email !== email;
+
+      if (isNotDoctor) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'Invalid Credentials' }] });
+      }
+
+      const getPwd = getDoctorDetail.pwd;
+      if (getPwd !== pwd) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'Invalid Credentials' }] });
+      }
+
+      res.json({ token: getDoctorDetail.d_id });
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
