@@ -14,7 +14,20 @@ client.connect();
 // @desc    Test Route
 // @access  Public
 router.get('/', async (req, res) => {
-  res.send('Test Route');
+  try {
+    const listAdmins = await (await client.execute('SELECT * FROM admin')).rows;
+    const listPatients = await (await client.execute('SELECT * FROM patient'))
+      .rows;
+    const listDoctors = await (await client.execute('SELECT * FROM doctor'))
+      .rows;
+    console.log(listAdmins);
+    console.log(listPatients);
+    console.log(listDoctors);
+    res.json({ listAdmins, listPatients, listDoctors });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
 });
 
 // @route   POST api/health/register
