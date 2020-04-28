@@ -2,6 +2,7 @@ const cassandra = require('cassandra-driver');
 const express = require('express');
 const router = express.Router();
 const uuid = cassandra.types.Uuid;
+const { check, validationResult } = require('express-validator');
 
 const client = new cassandra.Client({
   contactPoints: ['localhost'],
@@ -18,9 +19,6 @@ router.get('/', async (req, res) => {
     const listAdmins = (await client.execute('SELECT * FROM admin')).rows;
     const listPatients = (await client.execute('SELECT * FROM patient')).rows;
     const listDoctors = (await client.execute('SELECT * FROM doctor')).rows;
-    console.log(listAdmins);
-    console.log(listPatients);
-    console.log(listDoctors);
     res.json({ listAdmins, listPatients, listDoctors });
   } catch (err) {
     console.error(err.message);
@@ -31,58 +29,60 @@ router.get('/', async (req, res) => {
 // @route   POST api/health/patient/register
 // @desc    Register Patient
 // @access  Public
-router.post('/patient/register', async (req, res) => {
-  const { name, email, addr, dob, gender, phno, pwd } = req.body;
-  try {
-    const id = uuid.random();
+router.post(
+  '/patient/register',
+  [
+    check('name', 'Patient Name is required').not().isEmpty(),
+    check('email', 'Please Include a Email').isEmail(),
+    check('pwd', 'Password must be atleast 6 characters long').isLength({
+      min: 6,
+    }),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
-    // const registerQueries = [
-    //   {
-    //     query:
-    //       'INSERT INTO patient_sign_up ( name, gender, dob, addr, email, phno, pwd ) VALUES ( ?, ?, ?, ?, ?, ?, ? ) ;',
-    //     params: [name, gender, dob, addr, email, phno, pwd],
-    //   },
-    //   {
-    //     query: 'INSERT INTO patient_sign_in ( email, pwd ) VALUES ( ?, ? ) ;',
-    //     params: [email, pwd],
-    //   },
-    //   {
-    //     query: 'INSERT INTO patient_id ( name, id ) VALUES ( ?, ? ) ;',
-    //     params: [name, id],
-    //   },
-    // ];
-    // await client.batch(registerQueries, { prepare: true });
-    const getPatientDetail = (
-      await client.execute('SELECT * FROM patient WHERE email = ?', [email], {
-        prepare: true,
-      })
-    ).rows[0];
-    const isPatientNotExist =
-      typeof getPatientDetail === 'undefined' ||
-      getPatientDetail.email !== email;
-    console.log(isPatientNotExist);
+    const { name, email, addr, dob, gender, phno, pwd } = req.body;
+    try {
+      const id = uuid.random();
 
-    if (isPatientNotExist) {
-      const registerQuery =
-        'INSERT INTO patient ( id, name, email, addr, dob, gender, phno, pwd ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? ) ;';
-      const params = [id, name, email, addr, dob, gender, phno, pwd];
-      await client.execute(registerQuery, params, { prepare: true });
-
-      const returnEmail = (
+      const getPatientDetail = (
         await client.execute('SELECT * FROM patient WHERE email = ?', [email], {
           prepare: true,
         })
       ).rows[0];
+      const isPatientNotExist =
+        typeof getPatientDetail === 'undefined' ||
+        getPatientDetail.email !== email;
 
-      return res.json(returnEmail.email);
+      if (isPatientNotExist) {
+        const registerQuery =
+          'INSERT INTO patient ( id, name, email, addr, dob, gender, phno, pwd ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? ) ;';
+        const params = [id, name, email, addr, dob, gender, phno, pwd];
+        await client.execute(registerQuery, params, { prepare: true });
+
+        const returnEmail = (
+          await client.execute(
+            'SELECT * FROM patient WHERE email = ?',
+            [email],
+            {
+              prepare: true,
+            }
+          )
+        ).rows[0].email;
+
+        return res.json(returnEmail);
+      }
+
+      res.status(400).json({ errors: [{ msg: 'Patient Exists' }] });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
     }
-
-    res.json(getPatientDetail);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
   }
-});
+);
 
 // @route   POST api/health/patient/login
 // @desc    Login Patient

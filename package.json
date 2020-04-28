@@ -12,7 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "cassandra-driver": "^4.5.1",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "express-validator": "^6.4.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.3"
