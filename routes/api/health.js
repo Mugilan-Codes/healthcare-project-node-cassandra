@@ -52,28 +52,32 @@ router.post('/patient/register', async (req, res) => {
     //   },
     // ];
     // await client.batch(registerQueries, { prepare: true });
-    const checkPatientExists = (
+    const getPatientDetail = (
       await client.execute('SELECT * FROM patient WHERE email = ?', [email], {
         prepare: true,
       })
     ).rows[0];
     const isPatientNotExist =
-      typeof checkPatientExists === 'undefined' ||
-      checkPatientExists.email !== email;
+      typeof getPatientDetail === 'undefined' ||
+      getPatientDetail.email !== email;
     console.log(isPatientNotExist);
 
     if (isPatientNotExist) {
       const registerQuery =
         'INSERT INTO patient ( id, name, email, addr, dob, gender, phno, pwd ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? ) ;';
       const params = [id, name, email, addr, dob, gender, phno, pwd];
-      const registerPatient = await client.execute(registerQuery, params, {
-        prepare: true,
-      });
+      await client.execute(registerQuery, params, { prepare: true });
 
-      return res.json(registerPatient);
+      const returnEmail = (
+        await client.execute('SELECT * FROM patient WHERE email = ?', [email], {
+          prepare: true,
+        })
+      ).rows[0];
+
+      return res.json(returnEmail.email);
     }
 
-    res.json(checkPatientExists);
+    res.json(getPatientDetail);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
