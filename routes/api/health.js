@@ -15,19 +15,81 @@ const admin = require('../../middleware/admin');
 const auth = require('../../middleware/auth');
 
 // @route   GET api/health
-// @desc    List all Table Details
+// @desc    Test Route
 // @access  Public
-router.get('/', admin, async (req, res) => {
+router.get('/', (req, res) => {
+  res.send('API running...');
+});
+
+// @route   GET api/health/admin
+// @desc    List all Table Details
+// @access  Private
+router.get('/admin', admin, async (req, res) => {
   try {
-    const listAdmins = (await client.execute('SELECT * FROM admin')).rows;
+    const currentAdmin = (
+      await client.execute(
+        'SELECT name, email, id FROM admin WHERE email = ?',
+        [req.email],
+        { prepare: true }
+      )
+    ).rows;
+    const listAdmins = (await client.execute('SELECT name, email FROM admin'))
+      .rows;
     const listPatients = (await client.execute('SELECT * FROM patient')).rows;
     const listDoctors = (await client.execute('SELECT * FROM doctor')).rows;
-    res.json({ listAdmins, listPatients, listDoctors });
+    res.json({ currentAdmin, listAdmins, listPatients, listDoctors });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
 });
+
+// @route   POST api/health/admin/login
+// @desc    Login Admin
+// @access  Public
+router.post(
+  '/admin/login',
+  [
+    check('email', 'Please Include Email').isEmail(),
+    check('pwd', 'Password is Required').exists(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email, pwd } = req.body;
+    try {
+      const getAdminDetail = (
+        await client.execute('SELECT * FROM admin WHERE email = ?', [email], {
+          prepare: true,
+        })
+      ).rows[0];
+
+      const isNotAdmin =
+        typeof getAdminDetail === 'undefined' || getAdminDetail.email !== email;
+
+      if (isNotAdmin) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'Invalid Credentials' }] });
+      }
+
+      const getPwd = getAdminDetail.pwd;
+      if (getPwd !== pwd) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'Invalid Credentials' }] });
+      }
+
+      res.json({ token: getAdminDetail.id });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
 
 // @route   POST api/health/patient/register
 // @desc    Register Patient
@@ -83,7 +145,7 @@ router.post(
   }
 );
 
-// @route   POST api/health/patient
+// @route   GET api/health/patient
 // @desc    Get Auth Patient
 // @access  Private
 router.get('/patient', auth, async (req, res) => {
