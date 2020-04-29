@@ -19,7 +19,7 @@ const doctor = require('../../middleware/doctor');
 // @desc    Test Route
 // @access  Public
 router.get('/', (req, res) => {
-  res.send('API running...');
+  res.send('api/health Route');
 });
 
 // @route   GET api/health/admin
@@ -152,7 +152,7 @@ router.post(
 router.get('/patient', auth, async (req, res) => {
   try {
     const getAllDoctors = (
-      await client.execute('SELECT d_name, spec FROM doctor')
+      await client.execute('SELECT d_id ,d_name, spec FROM doctor')
     ).rows;
     const patient = (
       await client.execute(
@@ -333,6 +333,53 @@ router.post(
       res.json({ token: getDoctorDetail.d_id });
     } catch (err) {
       console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
+// @route   POST api/health/book/:d_id
+// @desc    Book Appointment for Patient with Doctor
+// @access  Private
+router.post(
+  '/book/:d_id',
+  [auth, [check('doa', 'Date of Appointment is required').isISO8601()]],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { doa } = req.body;
+    try {
+      const b_id = uuid.random();
+
+      const getDoctor = (
+        await client.execute(
+          'SELECT d_name, spec FROM doctor WHERE d_id = ? ALLOW FILTERING',
+          [req.params.d_id],
+          { prepare: true }
+        )
+      ).rows[0];
+
+      const isNotDoctor = typeof getDoctor === 'undefined';
+      if (isNotDoctor) {
+        return res.status(400).json({ msg: 'Doctor not found' });
+      }
+      const { d_name, spec } = getDoctor;
+
+      const bookAppointment = await client.execute(
+        'INSERT INTO book_appointment ( b_id, name, email, d_name, doa, time, spec ) VALUES ( ?, ?, ?, ?, ?, ?, ? ) ;',
+        [b_id, req.name, req.email, d_name, doa, new Date(), spec],
+        { prepare: true }
+      );
+
+      res.json(bookAppointment);
+    } catch (err) {
+      console.error(err.message);
+      if (err.name == 'TypeError') {
+        return res.status(400).json({ msg: 'Doctor not found' });
+      }
       res.status(500).send('Server Error');
     }
   }
