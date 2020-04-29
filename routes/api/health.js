@@ -38,7 +38,17 @@ router.get('/admin', admin, async (req, res) => {
       .rows;
     const listPatients = (await client.execute('SELECT * FROM patient')).rows;
     const listDoctors = (await client.execute('SELECT * FROM doctor')).rows;
-    res.json({ currentAdmin, listAdmins, listPatients, listDoctors });
+    const listAppointments = (
+      await client.execute('SELECT * FROM book_appointment')
+    ).rows;
+
+    res.json({
+      currentAdmin,
+      listAdmins,
+      listPatients,
+      listDoctors,
+      listAppointments,
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
