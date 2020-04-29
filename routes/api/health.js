@@ -283,7 +283,15 @@ router.get('/doctor', doctor, async (req, res) => {
         { prepare: true }
       )
     ).rows[0];
-    res.json(doctor);
+    const appointments = (
+      await client.execute(
+        'SELECT b_id, name, email, doa, time FROM book_appointment WHERE d_id = ? ALLOW FILTERING',
+        [doctor.d_id],
+        { prepare: true }
+      )
+    ).rows;
+
+    res.json({ doctor, appointments });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -356,7 +364,7 @@ router.post(
 
       const getDoctor = (
         await client.execute(
-          'SELECT d_name, spec FROM doctor WHERE d_id = ? ALLOW FILTERING',
+          'SELECT d_id, d_name, spec FROM doctor WHERE d_id = ? ALLOW FILTERING',
           [req.params.d_id],
           { prepare: true }
         )
@@ -366,13 +374,13 @@ router.post(
       if (isNotDoctor) {
         return res.status(400).json({ msg: 'Doctor not found' });
       }
-      const { d_name, spec } = getDoctor;
+      const { d_id, d_name, spec } = getDoctor;
 
       // Patient can't have more than One appointment on the same day
       const checkForDuplicate = (
         await client.execute(
-          'SELECT * FROM book_appointment WHERE name = ? AND doa = ? ALLOW FILTERING',
-          [req.name, doa],
+          'SELECT * FROM book_appointment WHERE p_id = ? AND doa = ? ALLOW FILTERING',
+          [req.id, doa],
           { prepare: true }
         )
       ).rows[0];
@@ -380,15 +388,24 @@ router.post(
         return res.status(400).json({ msg: 'Already Booked' });
 
       await client.execute(
-        'INSERT INTO book_appointment ( b_id, name, email, d_name, doa, time, spec ) VALUES ( ?, ?, ?, ?, ?, ?, ? ) ;',
-        [b_id, req.name, req.email, d_name, doa, new Date(), spec],
+        'INSERT INTO book_appointment ( b_id, p_id, name, email, d_id, d_name, doa, time, spec ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? ) ;',
+        [
+          b_id,
+          req.id,
+          req.name,
+          req.email,
+          d_id,
+          d_name,
+          doa,
+          new Date(),
+          spec,
+        ],
         { prepare: true }
       );
 
       res.json({
-        patient: req.name,
-        doctor: d_name,
-        specialization: spec,
+        patient: { id: req.id, name: req.name },
+        doctor: { id: d_id, name: d_name, specialization: spec },
         appoinment_date: doa,
         message: `${req.name}, Your appointment is booked with Doctor ${d_name}(${spec}) on ${doa}`,
       });
