@@ -368,13 +368,30 @@ router.post(
       }
       const { d_name, spec } = getDoctor;
 
-      const bookAppointment = await client.execute(
+      // Patient can't have more than One appointment on the same day
+      const checkForDuplicate = (
+        await client.execute(
+          'SELECT * FROM book_appointment WHERE name = ? AND doa = ? ALLOW FILTERING',
+          [req.name, doa],
+          { prepare: true }
+        )
+      ).rows[0];
+      if (checkForDuplicate)
+        return res.status(400).json({ msg: 'Already Booked' });
+
+      await client.execute(
         'INSERT INTO book_appointment ( b_id, name, email, d_name, doa, time, spec ) VALUES ( ?, ?, ?, ?, ?, ?, ? ) ;',
         [b_id, req.name, req.email, d_name, doa, new Date(), spec],
         { prepare: true }
       );
 
-      res.json(bookAppointment);
+      res.json({
+        patient: req.name,
+        doctor: d_name,
+        specialization: spec,
+        appoinment_date: doa,
+        message: `${req.name}, Your appointment is booked with Doctor ${d_name}(${spec}) on ${doa}`,
+      });
     } catch (err) {
       console.error(err.message);
       if (err.name == 'TypeError') {
