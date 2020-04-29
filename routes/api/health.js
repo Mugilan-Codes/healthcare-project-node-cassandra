@@ -161,7 +161,15 @@ router.get('/patient', auth, async (req, res) => {
         { prepare: true }
       )
     ).rows[0];
-    res.json({ patient, getAllDoctors });
+    const bookedAppointments = (
+      await client.execute(
+        'SELECT b_id, d_name, spec, doa, time FROM book_appointment WHERE p_id = ? ALLOW FILTERING',
+        [req.id],
+        { prepare: true }
+      )
+    ).rows;
+
+    res.json({ patient, getAllDoctors, bookedAppointments });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -411,7 +419,7 @@ router.post(
       });
     } catch (err) {
       console.error(err.message);
-      if (err.name == 'TypeError') {
+      if (err.name === 'TypeError') {
         return res.status(400).json({ msg: 'Doctor not found' });
       }
       res.status(500).send('Server Error');
