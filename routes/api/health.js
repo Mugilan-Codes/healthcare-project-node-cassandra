@@ -294,23 +294,29 @@ router.post(
 // @desc    Get Auth Doctor
 // @access  Private
 router.get('/doctor', doctor, async (req, res) => {
+  const { d_id, d_name, email, spec, pwd } = req;
+
   try {
-    const doctor = (
-      await client.execute(
-        'SELECT * FROM doctor WHERE email = ?',
-        [req.email],
-        { prepare: true }
-      )
-    ).rows[0];
     const appointments = (
       await client.execute(
         'SELECT b_id, name, email, doa, time FROM book_appointment WHERE d_id = ? ALLOW FILTERING',
-        [doctor.d_id],
+        [d_id],
+        { prepare: true }
+      )
+    ).rows;
+    const consultations = (
+      await client.execute(
+        'SELECT c_id, p_id, name, age, gender, symptoms, affected_area, additional_info, days, consulted_on, cp_id FROM consult_doctor WHERE d_id = ? ALLOW FILTERING',
+        [d_id],
         { prepare: true }
       )
     ).rows;
 
-    res.json({ doctor, appointments });
+    res.json({
+      doctor: { d_id, d_name, email, spec, pwd },
+      appointments,
+      consultations,
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -543,6 +549,103 @@ router.post(
       console.error(err.message);
       if (err.name === 'TypeError') {
         return res.status(400).json({ msg: 'Doctor not found' });
+      }
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
+// @route   POST api/health/check/:c_id
+// @desc    Check Patient
+// @access  Private
+router.post(
+  '/check/:c_id',
+  [
+    doctor,
+    [
+      check('diagnosis', 'Diagnosis is Required').not().isEmpty(),
+      check('prescription', 'Give Prescription').not().isEmpty(),
+      check('result', 'Result is required').not().isEmpty(),
+      check('status', 'Status is required').not().isEmpty(),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    req.body.prescription = req.body.prescription
+      .split(',')
+      .map((area) => area.trim());
+
+    const {
+      body: { diagnosis, prescription, result, status },
+      d_id,
+      params: { c_id },
+    } = req;
+
+    try {
+      const cp_id = uuid.random();
+
+      let getConsultation = (
+        await client.execute(
+          'SELECT * FROM consult_doctor WHERE c_id = ? ALLOW FILTERING',
+          [c_id],
+          { prepare: true }
+        )
+      ).rows[0];
+      const isNotConsultation = typeof getConsultation === 'undefined';
+      if (isNotConsultation) {
+        return res.status(400).json({ msg: 'Consultation Request Not Found' });
+      }
+
+      const { p_id } = getConsultation;
+
+      const checked_on = new Date();
+
+      const checkForDuplicate = (
+        await client.execute(
+          'SELECT * FROM check_patient WHERE c_id = ? ALLOW FILTERING',
+          [c_id],
+          { prepare: true }
+        )
+      ).rows[0];
+      if (checkForDuplicate)
+        return res.status(400).json({ msg: 'Already Checked Patient' });
+
+      await client.execute(
+        'INSERT INTO check_patient ( cp_id, c_id, diagnosis, prescription, result, status, checked_on ) VALUES ( ?, ?, ?, ?, ?, ?, ? ) ;',
+        [cp_id, c_id, diagnosis, prescription, result, status, checked_on],
+        { prepare: true }
+      );
+      await client.execute(
+        'UPDATE consult_doctor SET cp_id = ? WHERE c_id = ? AND p_id = ? AND d_id = ?',
+        [cp_id, c_id, p_id, d_id],
+        { prepare: true }
+      );
+
+      getConsultation = (
+        await client.execute(
+          'SELECT * FROM consult_doctor WHERE c_id = ? ALLOW FILTERING',
+          [c_id],
+          { prepare: true }
+        )
+      ).rows[0];
+
+      res.json({
+        getConsultation,
+        cp_id,
+        diagnosis,
+        prescription,
+        result,
+        status,
+        checked_on,
+      });
+    } catch (err) {
+      console.error(err.message);
+      if (err.name === 'TypeError') {
+        return res.status(400).json({ msg: 'Consultation Request Not Found' });
       }
       res.status(500).send('Server Error');
     }
