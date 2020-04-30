@@ -40,9 +40,9 @@ const initDB = async () => {
     await client.execute(createBookAppointmentTable);
     // console.log('book_appointment Table Created');
 
-    // const createConsultDoctorTable =
-    //   'CREATE TABLE IF NOT EXISTS consult_doctor ( id uuid, name text, age int, docname text, gender text, status varchar, symp varchar, affarea list<varchar>, days int, distype varchar, spec varchar, addinfo varchar, PRIMARY KEY ( id, name ) ) ;';
-    // await client.execute(createConsultDoctorTable);
+    const createConsultDoctorTable =
+      'CREATE TABLE IF NOT EXISTS consult_doctor ( c_id uuid, p_id uuid, name text, age int, gender text, d_id uuid, d_name text, spec varchar, symptoms varchar, affected_area list<varchar>, additional_info varchar, days int, consulted_on date, PRIMARY KEY ( ( p_id, d_id ), c_id ) ) ;';
+    await client.execute(createConsultDoctorTable);
     // console.log('consult_doctor Table Created');
 
     // const createCheckPatientTable =

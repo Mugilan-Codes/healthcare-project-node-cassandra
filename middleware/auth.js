@@ -27,6 +27,8 @@ module.exports = async (req, res, next) => {
     req.email = decoded.email;
     req.name = decoded.name;
     req.id = decoded.id;
+    req.dob = decoded.dob;
+    req.gender = decoded.gender;
     next();
   } catch (err) {
     res.status(401).json({ msg: 'Token is Invalid' });

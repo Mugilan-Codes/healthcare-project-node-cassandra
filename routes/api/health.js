@@ -108,6 +108,7 @@ router.post(
 router.post(
   '/patient/register',
   [
+    // @todo   Add More Checks for Registeration
     check('name', 'Patient Name is required').not().isEmpty(),
     check('email', 'Please Include a Email').isEmail(),
     check('pwd', 'Password must be atleast 6 characters long').isLength({
@@ -426,6 +427,117 @@ router.post(
         doctor: { id: d_id, name: d_name, specialization: spec },
         appoinment_date: doa,
         message: `${req.name}, Your appointment is booked with Doctor ${d_name}(${spec}) on ${doa}`,
+      });
+    } catch (err) {
+      console.error(err.message);
+      if (err.name === 'TypeError') {
+        return res.status(400).json({ msg: 'Doctor not found' });
+      }
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
+// @route   POST api/health/consult/:d_id
+// @desc    Consult Doctor
+// @access  Private
+router.post(
+  '/consult/:d_id',
+  [
+    auth,
+    [
+      check('symptoms', 'Enter Your Symptoms').not().isEmpty(),
+      check('affected_area', 'Enter the Affected Area').not().isEmpty(),
+      check('additional_info', 'Need Some Additional Info').not().isEmpty(),
+      check('days', 'Number of Days Affected (Number)').isNumeric(),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    req.body.affected_area = req.body.affected_area
+      .split(',')
+      .map((area) => area.trim());
+
+    const {
+      body: { symptoms, affected_area, additional_info, days },
+      email,
+      name,
+      id,
+      dob: { date }, // To Calculate Age of the Patient
+      gender,
+    } = req;
+
+    const calculateAge = (dateString) => {
+      let today = new Date();
+      let birthDate = new Date(dateString);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      let m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      return age;
+    };
+    const age = calculateAge(date);
+
+    try {
+      const c_id = uuid.random();
+
+      const getDoctor = (
+        await client.execute(
+          'SELECT d_id, d_name, spec FROM doctor WHERE d_id = ? ALLOW FILTERING',
+          [req.params.d_id],
+          { prepare: true }
+        )
+      ).rows[0];
+
+      const isNotDoctor = typeof getDoctor === 'undefined';
+      if (isNotDoctor) {
+        return res.status(400).json({ msg: 'Doctor not found' });
+      }
+      const { d_id, d_name, spec } = getDoctor;
+
+      const consulted_on = new Date();
+
+      const checkForDuplicate = (
+        await client.execute(
+          'SELECT * FROM consult_doctor WHERE p_id = ? AND consulted_on = ? ALLOW FILTERING',
+          [id, consulted_on],
+          { prepare: true }
+        )
+      ).rows[0];
+      if (checkForDuplicate)
+        return res.status(400).json({ msg: 'Already Consulted' });
+
+      await client.execute(
+        'INSERT INTO consult_doctor ( c_id, p_id, name, age, gender, d_id, d_name, spec, symptoms, affected_area, additional_info, days, consulted_on ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ;',
+        [
+          c_id,
+          id,
+          name,
+          age,
+          gender,
+          d_id,
+          d_name,
+          spec,
+          symptoms,
+          affected_area,
+          additional_info,
+          days,
+          consulted_on,
+        ],
+        { prepare: true }
+      );
+
+      res.json({
+        c_id,
+        patient: { id, name, age, gender },
+        doctor: { id: d_id, name: d_name, specialization: spec },
+        description: { symptoms, affected_area, additional_info, days },
+        consulted_on,
       });
     } catch (err) {
       console.error(err.message);
