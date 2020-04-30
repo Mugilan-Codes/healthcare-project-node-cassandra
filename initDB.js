@@ -3,7 +3,6 @@ const uuid = cassandra.types.Uuid;
 
 const initDB = async () => {
   try {
-    // Initialize Keyspace and Empty Tables
     const client = new cassandra.Client({
       contactPoints: ['localhost'],
       localDataCenter: 'datacenter1',
@@ -46,7 +45,7 @@ const initDB = async () => {
     // console.log('consult_doctor Table Created');
 
     const createCheckPatientTable =
-      'CREATE TABLE IF NOT EXISTS check_patient ( cp_id uuid, c_id uuid, diagnosis varchar, prescription list<varchar>, result varchar, status varchar, checked_on date, PRIMARY KEY ( cp_id, c_id ) ) ;';
+      'CREATE TABLE IF NOT EXISTS check_patient ( cp_id uuid, c_id uuid, p_id uuid, d_id uuid, diagnosis varchar, prescription list<varchar>, result varchar, status varchar, checked_on date, PRIMARY KEY ( cp_id, c_id ) ) ;';
     await client.execute(createCheckPatientTable);
     // console.log('check_patient Table Created');
 

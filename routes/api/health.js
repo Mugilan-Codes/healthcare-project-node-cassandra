@@ -27,6 +27,7 @@ router.get('/', (req, res) => {
 // @access  Private
 router.get('/admin', admin, async (req, res) => {
   try {
+    // @todo  Need More Work on Admin
     const currentAdmin = (
       await client.execute(
         'SELECT name, email, id FROM admin WHERE email = ?',
@@ -110,6 +111,8 @@ router.post(
   [
     // @todo   Add More Checks for Registeration
     check('name', 'Patient Name is required').not().isEmpty(),
+    check('dob', 'Date of Birth is required').not().isEmpty(),
+    check('gender', 'Gender is required').not().isEmpty(),
     check('email', 'Please Include a Email').isEmail(),
     check('pwd', 'Password must be atleast 6 characters long').isLength({
       min: 6,
@@ -162,14 +165,32 @@ router.post(
 // @access  Private
 router.get('/patient', auth, async (req, res) => {
   try {
+    const { id, name, email, addr, dob, gender, phno, pwd } = req;
+
     const getAllDoctors = (
       await client.execute('SELECT d_id ,d_name, spec FROM doctor')
     ).rows;
-    const { id, name, email, addr, dob, gender, phno, pwd } = req;
+
     const bookedAppointments = (
       await client.execute(
         'SELECT b_id, d_name, spec, doa, time FROM book_appointment WHERE p_id = ? ALLOW FILTERING',
-        [req.id],
+        [id],
+        { prepare: true }
+      )
+    ).rows;
+
+    const consultations = (
+      await client.execute(
+        'SELECT * FROM consult_doctor WHERE p_id = ? ALLOW FILTERING',
+        [id],
+        { prepare: true }
+      )
+    ).rows;
+
+    const doctorReply = (
+      await client.execute(
+        'SELECT * FROM check_patient WHERE p_id = ? ALLOW FILTERING',
+        [id],
         { prepare: true }
       )
     ).rows;
@@ -178,6 +199,8 @@ router.get('/patient', auth, async (req, res) => {
       patient: { id, name, email, addr, dob, gender, phno, pwd },
       getAllDoctors,
       bookedAppointments,
+      consultations,
+      doctorReply,
     });
   } catch (err) {
     console.error(err.message);
@@ -211,7 +234,6 @@ router.post(
       const isPatientNotExist =
         typeof getPatientDetail === 'undefined' ||
         getPatientDetail.email !== email;
-
       if (isPatientNotExist) {
         return res
           .status(400)
@@ -302,6 +324,7 @@ router.get('/doctor', doctor, async (req, res) => {
         { prepare: true }
       )
     ).rows;
+
     const consultations = (
       await client.execute(
         'SELECT c_id, p_id, name, age, gender, symptoms, affected_area, additional_info, days, consulted_on, cp_id FROM consult_doctor WHERE d_id = ? ALLOW FILTERING',
@@ -613,8 +636,18 @@ router.post(
         return res.status(400).json({ msg: 'Already Checked Patient' });
 
       await client.execute(
-        'INSERT INTO check_patient ( cp_id, c_id, diagnosis, prescription, result, status, checked_on ) VALUES ( ?, ?, ?, ?, ?, ?, ? ) ;',
-        [cp_id, c_id, diagnosis, prescription, result, status, checked_on],
+        'INSERT INTO check_patient ( cp_id, c_id, p_id, d_id, diagnosis, prescription, result, status, checked_on ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? ) ;',
+        [
+          cp_id,
+          c_id,
+          p_id,
+          d_id,
+          diagnosis,
+          prescription,
+          result,
+          status,
+          checked_on,
+        ],
         { prepare: true }
       );
       await client.execute(
