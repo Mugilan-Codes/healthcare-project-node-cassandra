@@ -24,11 +24,14 @@ module.exports = async (req, res, next) => {
       )
     ).rows[0];
     // console.log(`decoded = ${JSON.stringify(decoded)}`);
-    req.email = decoded.email;
-    req.name = decoded.name;
     req.id = decoded.id;
+    req.name = decoded.name;
+    req.email = decoded.email;
+    req.addr = decoded.addr;
     req.dob = decoded.dob;
     req.gender = decoded.gender;
+    req.phno = decoded.phno;
+    req.pwd = decoded.pwd;
     next();
   } catch (err) {
     res.status(401).json({ msg: 'Token is Invalid' });

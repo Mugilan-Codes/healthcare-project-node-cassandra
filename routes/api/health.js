@@ -165,13 +165,7 @@ router.get('/patient', auth, async (req, res) => {
     const getAllDoctors = (
       await client.execute('SELECT d_id ,d_name, spec FROM doctor')
     ).rows;
-    const patient = (
-      await client.execute(
-        'SELECT * FROM patient WHERE email = ?',
-        [req.email],
-        { prepare: true }
-      )
-    ).rows[0];
+    const { id, name, email, addr, dob, gender, phno, pwd } = req;
     const bookedAppointments = (
       await client.execute(
         'SELECT b_id, d_name, spec, doa, time FROM book_appointment WHERE p_id = ? ALLOW FILTERING',
@@ -180,7 +174,11 @@ router.get('/patient', auth, async (req, res) => {
       )
     ).rows;
 
-    res.json({ patient, getAllDoctors, bookedAppointments });
+    res.json({
+      patient: { id, name, email, addr, dob, gender, phno, pwd },
+      getAllDoctors,
+      bookedAppointments,
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
