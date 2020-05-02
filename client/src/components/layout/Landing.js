@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Landing = () => {
   return (
@@ -10,12 +11,12 @@ const Landing = () => {
             This is a Healthcare Management System Project. Using CassandraDB
           </p>
           <div className='buttons'>
-            <a href='register.html' className='btn btn-primary'>
+            <Link to='/register' className='btn btn-primary'>
               Register
-            </a>
-            <a href='login.html' className='btn'>
+            </Link>
+            <Link to='/login' className='btn'>
               Log In
-            </a>
+            </Link>
           </div>
         </div>
       </div>

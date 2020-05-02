@@ -1,17 +1,18 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
     <footer className='bg-dark'>
       <ul>
         <li>
-          <a href='admin.html'>Admin</a>
+          <Link to='!#'>Admin</Link>
         </li>
         <li>
-          <a href='doctor-landing.html'>Doctor</a>
+          <Link to='/doctor'>Doctor</Link>
         </li>
         <li>
-          <a href='about.html'>About</a>
+          <Link to='!#'>About</Link>
         </li>
       </ul>
       <span>Copyright 1999-2020, MugilanCodes</span>
