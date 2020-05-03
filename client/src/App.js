@@ -8,6 +8,7 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import DoctorLogin from './components/auth/DoctorLogin';
 import DoctorRegister from './components/auth/DoctorRegister';
+import Alert from './components/layout/Alert';
 // import Footer from './components/layout/Footer';
 
 // Redux
@@ -24,6 +25,7 @@ const App = () => (
         <Route exact path='/' component={Landing} />
         <Route exact path='/doctor' component={DoctorLanding} />
         <section className='container'>
+          <Alert />
           <Switch>
             <Route exact path='/register' component={Register} />
             <Route exact path='/login' component={Login} />

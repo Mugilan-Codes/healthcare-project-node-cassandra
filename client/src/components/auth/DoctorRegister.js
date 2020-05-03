@@ -1,8 +1,11 @@
 import React, { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-const DoctorRegister = () => {
+import { setAlert } from '../../actions/alert';
+
+const DoctorRegister = ({ setAlert }) => {
   const [formData, setFormData] = useState({
     d_name: '',
     spec: '',
@@ -20,7 +23,7 @@ const DoctorRegister = () => {
     e.preventDefault();
 
     if (pwd !== pwd2) {
-      console.log('Password Does not Match');
+      setAlert('Passwords do not Match!', 'danger');
     } else {
       // const newDoctor = { d_name, spec, email, pwd };
 
@@ -112,4 +115,6 @@ const DoctorRegister = () => {
   );
 };
 
-export default DoctorRegister;
+DoctorRegister.propTypes = { setAlert: PropTypes.func.isRequired };
+
+export default connect(null, { setAlert })(DoctorRegister);
