@@ -22,19 +22,20 @@ const DoctorRegister = () => {
     if (pwd !== pwd2) {
       console.log('Password Does not Match');
     } else {
-      const newDoctor = { d_name, spec, email, pwd };
+      // const newDoctor = { d_name, spec, email, pwd };
 
-      try {
-        const config = { headers: { 'Content-Type': 'application/json' } };
+      // try {
+      //   const config = { headers: { 'Content-Type': 'application/json' } };
 
-        const body = JSON.stringify(newDoctor);
+      //   const body = JSON.stringify(newDoctor);
 
-        const res = await axios.post('/doctor/register', body, config);
+      //   const res = await axios.post('/doctor/register', body, config);
 
-        console.log(res.data);
-      } catch (err) {
-        console.error(err.response.data);
-      }
+      //   console.log(res.data);
+      // } catch (err) {
+      //   console.error(err.response.data);
+      // }
+      console.log('SUCCESS');
     }
   };
 

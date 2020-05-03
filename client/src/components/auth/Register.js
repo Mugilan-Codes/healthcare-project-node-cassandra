@@ -25,19 +25,20 @@ const Register = () => {
     if (pwd !== pwd2) {
       console.log('Passwords Dows Not Match');
     } else {
-      const newPatient = { name, email, addr, dob, gender, phno, pwd };
+      // const newPatient = { name, email, addr, dob, gender, phno, pwd };
 
-      try {
-        const config = { headers: { 'Content-Type': 'application/json' } };
+      // try {
+      //   const config = { headers: { 'Content-Type': 'application/json' } };
 
-        const body = JSON.stringify(newPatient);
+      //   const body = JSON.stringify(newPatient);
 
-        const res = await axios.post('/patient/register', body, config);
+      //   const res = await axios.post('/patient/register', body, config);
 
-        console.log(res.data);
-      } catch (err) {
-        console.error(err.response.data);
-      }
+      //   console.log(res.data);
+      // } catch (err) {
+      //   console.error(err.response.data);
+      // }
+      console.log('SUCCESS');
     }
   };
 
