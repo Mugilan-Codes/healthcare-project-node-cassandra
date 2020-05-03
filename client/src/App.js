@@ -9,6 +9,10 @@ import Register from './components/auth/Register';
 import DoctorLogin from './components/auth/DoctorLogin';
 import DoctorRegister from './components/auth/DoctorRegister';
 import Alert from './components/layout/Alert';
+import Dashboard from './components/dashboard/Dashboard';
+import DoctorDashboard from './components/dashboard/DoctorDashboard';
+import PrivateRoute from './components/routing/PrivateRoute';
+import DoctorPrivateRoute from './components/routing/DoctorPrivateRoute';
 // import Footer from './components/layout/Footer';
 
 // Redux
@@ -44,6 +48,12 @@ const App = () => {
               <Route exact path='/login' component={Login} />
               <Route exact path='/doctor-register' component={DoctorRegister} />
               <Route exact path='/doctor-login' component={DoctorLogin} />
+              <PrivateRoute exact path='/dashboard' component={Dashboard} />
+              <DoctorPrivateRoute
+                exact
+                path='/doctor-dashboard'
+                component={DoctorDashboard}
+              />
             </Switch>
           </section>
           {/* <Footer /> */}
