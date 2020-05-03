@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -18,13 +19,25 @@ const Register = () => {
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
 
     if (pwd !== pwd2) {
       console.log('Passwords Dows Not Match');
     } else {
-      console.log(formData);
+      const newPatient = { name, email, addr, dob, gender, phno, pwd };
+
+      try {
+        const config = { headers: { 'Content-Type': 'application/json' } };
+
+        const body = JSON.stringify(newPatient);
+
+        const res = await axios.post('/patient/register', body, config);
+
+        console.log(res.data);
+      } catch (err) {
+        console.error(err.response.data);
+      }
     }
   };
 

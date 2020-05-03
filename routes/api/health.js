@@ -124,6 +124,15 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
+    req.body.phno = Number(req.body.phno);
+    if (req.body.phno === 0) {
+      req.body.phno = null;
+    }
+
+    if (!req.body.addr || req.body.addr.trim().length === 0) {
+      req.body.addr = null;
+    }
+
     const { name, email, addr, dob, gender, phno, pwd } = req.body;
     try {
       const id = uuid.random();
