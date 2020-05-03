@@ -1,7 +1,31 @@
 import axios from 'axios';
 
-import { REGISTER_SUCCESS, REGISTER_FAIL } from './types';
+import {
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+  USER_LOADED,
+  AUTH_ERROR,
+} from './types';
 import { setAlert } from './alert';
+import setAuthToken from '../utils/setAuthToken';
+
+// Load Patient
+export const loadPatient = () => async (dispatch) => {
+  if (localStorage.token) {
+    setAuthToken(localStorage.token);
+  }
+
+  try {
+    const res = await axios.get('/patient');
+
+    dispatch({
+      type: USER_LOADED,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({ type: AUTH_ERROR });
+  }
+};
 
 // Register Patient
 export const register = ({
@@ -33,6 +57,24 @@ export const register = ({
     }
 
     dispatch({ type: REGISTER_FAIL });
+  }
+};
+
+// Load Doctor
+export const loadDoctor = () => async (dispatch) => {
+  if (localStorage.token) {
+    setAuthToken(localStorage.token);
+  }
+
+  try {
+    const res = await axios.get('/doctor');
+
+    dispatch({
+      type: USER_LOADED,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({ type: AUTH_ERROR });
   }
 };
 
