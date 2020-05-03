@@ -119,7 +119,7 @@ DoctorRegister.propTypes = {
   setAlert: PropTypes.func.isRequired,
   doctorRegister: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool,
-  role: PropTypes.string.isRequired,
+  role: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({

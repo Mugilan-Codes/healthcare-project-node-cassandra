@@ -69,7 +69,7 @@ const DoctorLogin = ({ doctorLogin, isAuthenticated, role }) => {
 DoctorLogin.propTypes = {
   doctorLogin: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool,
-  role: PropTypes.string.isRequired,
+  role: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({

@@ -172,7 +172,7 @@ Register.propTypes = {
   setAlert: PropTypes.func.isRequired,
   register: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool,
-  role: PropTypes.string.isRequired,
+  role: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
