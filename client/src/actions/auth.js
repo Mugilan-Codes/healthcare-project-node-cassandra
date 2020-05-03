@@ -7,6 +7,8 @@ import {
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
+  PATIENT,
+  DOCTOR,
 } from './types';
 import { setAlert } from './alert';
 import setAuthToken from '../utils/setAuthToken';
@@ -23,6 +25,7 @@ export const loadPatient = () => async (dispatch) => {
     dispatch({
       type: USER_LOADED,
       payload: res.data,
+      // role: PATIENT,
     });
   } catch (err) {
     dispatch({ type: AUTH_ERROR });
@@ -51,6 +54,7 @@ export const register = ({
     dispatch({
       type: REGISTER_SUCCESS,
       payload: res.data,
+      role: PATIENT,
     });
 
     dispatch(loadPatient());
@@ -78,6 +82,7 @@ export const login = (email, pwd) => async (dispatch) => {
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,
+      role: PATIENT,
     });
 
     dispatch(loadPatient());
@@ -103,6 +108,7 @@ export const loadDoctor = () => async (dispatch) => {
     dispatch({
       type: USER_LOADED,
       payload: res.data,
+      // role: DOCTOR,
     });
   } catch (err) {
     dispatch({ type: AUTH_ERROR });
@@ -125,6 +131,7 @@ export const doctorRegister = ({ d_name, spec, email, pwd }) => async (
     dispatch({
       type: REGISTER_SUCCESS,
       payload: res.data,
+      role: DOCTOR,
     });
 
     dispatch(loadDoctor());
@@ -152,6 +159,7 @@ export const doctorLogin = (email, pwd) => async (dispatch) => {
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,
+      role: DOCTOR,
     });
 
     dispatch(loadDoctor());

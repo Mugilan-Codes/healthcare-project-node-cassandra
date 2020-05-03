@@ -16,6 +16,7 @@ import { Provider } from 'react-redux';
 import store from './store';
 import { loadPatient, loadDoctor } from './actions/auth';
 import setAuthToken from './utils/setAuthToken';
+import { DOCTOR, PATIENT } from './actions/types';
 
 import './App.css';
 
@@ -25,8 +26,8 @@ if (localStorage.token) {
 
 const App = () => {
   useEffect(() => {
-    store.dispatch(loadPatient());
-    store.dispatch(loadDoctor());
+    if (localStorage.role === DOCTOR) store.dispatch(loadDoctor());
+    if (localStorage.role === PATIENT) store.dispatch(loadPatient());
   }, []);
 
   return (

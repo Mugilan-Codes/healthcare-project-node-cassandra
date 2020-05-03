@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { doctorLogin } from '../../actions/auth';
+import { DOCTOR } from '../../actions/types';
 
-const DoctorLogin = ({ doctorLogin, isAuthenticated }) => {
+const DoctorLogin = ({ doctorLogin, isAuthenticated, role }) => {
   const [formData, setFormData] = useState({
     email: '',
     pwd: '',
@@ -22,7 +23,7 @@ const DoctorLogin = ({ doctorLogin, isAuthenticated }) => {
     doctorLogin(email, pwd);
   };
 
-  if (isAuthenticated) {
+  if (role === DOCTOR && isAuthenticated) {
     return <Redirect to='/doctor-dashboard' />;
   }
 
@@ -68,10 +69,12 @@ const DoctorLogin = ({ doctorLogin, isAuthenticated }) => {
 DoctorLogin.propTypes = {
   doctorLogin: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool,
+  role: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  role: state.auth.role,
 });
 
 export default connect(mapStateToProps, { doctorLogin })(DoctorLogin);

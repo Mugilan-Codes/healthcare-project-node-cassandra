@@ -5,8 +5,14 @@ import PropTypes from 'prop-types';
 
 import { setAlert } from '../../actions/alert';
 import { doctorRegister } from '../../actions/auth';
+import { DOCTOR } from '../../actions/types';
 
-const DoctorRegister = ({ setAlert, doctorRegister, isAuthenticated }) => {
+const DoctorRegister = ({
+  setAlert,
+  doctorRegister,
+  isAuthenticated,
+  role,
+}) => {
   const [formData, setFormData] = useState({
     d_name: '',
     spec: '',
@@ -32,7 +38,7 @@ const DoctorRegister = ({ setAlert, doctorRegister, isAuthenticated }) => {
     }
   };
 
-  if (isAuthenticated) {
+  if (role === DOCTOR && isAuthenticated) {
     return <Redirect to='/doctor-dashboard' />;
   }
 
@@ -113,10 +119,12 @@ DoctorRegister.propTypes = {
   setAlert: PropTypes.func.isRequired,
   doctorRegister: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool,
+  role: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  role: state.auth.role,
 });
 
 export default connect(mapStateToProps, { setAlert, doctorRegister })(

@@ -5,8 +5,9 @@ import PropTypes from 'prop-types';
 
 import { setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
+import { PATIENT } from '../../actions/types';
 
-const Register = ({ setAlert, register, isAuthenticated }) => {
+const Register = ({ setAlert, register, isAuthenticated, role }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -35,7 +36,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
     }
   };
 
-  if (isAuthenticated) {
+  if (role === PATIENT && isAuthenticated) {
     return <Redirect to='/dashboard' />;
   }
 
@@ -171,10 +172,12 @@ Register.propTypes = {
   setAlert: PropTypes.func.isRequired,
   register: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool,
+  role: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  role: state.auth.role,
 });
 
 export default connect(mapStateToProps, { setAlert, register })(Register);

@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { login } from '../../actions/auth';
+import { PATIENT } from '../../actions/types';
 
-const Login = ({ login, isAuthenticated }) => {
+const Login = ({ login, isAuthenticated, role }) => {
   const [formData, setFormData] = useState({
     email: '',
     pwd: '',
@@ -22,7 +23,7 @@ const Login = ({ login, isAuthenticated }) => {
     login(email, pwd);
   };
 
-  if (isAuthenticated) {
+  if (role === PATIENT && isAuthenticated) {
     return <Redirect to='/dashboard' />;
   }
 
@@ -68,10 +69,12 @@ const Login = ({ login, isAuthenticated }) => {
 Login.propTypes = {
   login: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool,
+  role: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  role: state.auth.role,
 });
 
 export default connect(mapStateToProps, { login })(Login);
