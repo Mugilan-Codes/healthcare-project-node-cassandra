@@ -16,10 +16,23 @@ const auth = require('../../middleware/auth');
 const doctor = require('../../middleware/doctor');
 
 // @route   GET api/health
-// @desc    Test Route
+// @desc    Get Total Patients, Doctors, & Admins
 // @access  Public
-router.get('/', (req, res) => {
-  res.send('api/health Route');
+router.get('/', async (req, res) => {
+  try {
+    const totalPatients = (await client.execute('SELECT * FROM patient'))
+      .rowLength;
+
+    const totalDoctors = (await client.execute('SELECT * FROM doctor'))
+      .rowLength;
+
+    const totalAdmins = (await client.execute('SELECT * FROM admin')).rowLength;
+
+    res.json({ totalPatients, totalDoctors, totalAdmins });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
 });
 
 // @route   GET api/health/admin
