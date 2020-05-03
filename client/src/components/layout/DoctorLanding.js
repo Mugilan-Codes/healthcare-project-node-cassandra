@@ -1,7 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { useFetch } from '../../actions/hooks';
+
 const Landing = () => {
+  const [data] = useFetch('/total');
+  const { totalPatients, totalDoctors } = data;
+
   return (
     <section className='doctor-landing'>
       <div className='dark-overlay'>
@@ -10,9 +15,9 @@ const Landing = () => {
           <p className='lead'>
             This is Doctor Landing Page
             <br />
-            No. of Patients: <span>7</span>
+            No. of Patients: <span>{totalPatients}</span>
             <br />
-            No. of Doctors: <span>14</span>
+            No. of Doctors: <span>{totalDoctors}</span>
           </p>
           <div className='buttons'>
             <Link to='/doctor-register' className='btn btn-primary'>

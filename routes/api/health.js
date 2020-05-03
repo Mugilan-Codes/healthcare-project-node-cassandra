@@ -15,10 +15,10 @@ const admin = require('../../middleware/admin');
 const auth = require('../../middleware/auth');
 const doctor = require('../../middleware/doctor');
 
-// @route   GET api/health
+// @route   GET api/health/total
 // @desc    Get Total Patients, Doctors, & Admins
 // @access  Public
-router.get('/', async (req, res) => {
+router.get('/total', async (req, res) => {
   try {
     const totalPatients = (await client.execute('SELECT * FROM patient'))
       .rowLength;
