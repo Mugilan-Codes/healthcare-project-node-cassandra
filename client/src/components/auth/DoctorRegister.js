@@ -1,12 +1,12 @@
 import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { setAlert } from '../../actions/alert';
 import { doctorRegister } from '../../actions/auth';
 
-const DoctorRegister = ({ setAlert, doctorRegister }) => {
+const DoctorRegister = ({ setAlert, doctorRegister, isAuthenticated }) => {
   const [formData, setFormData] = useState({
     d_name: '',
     spec: '',
@@ -31,6 +31,10 @@ const DoctorRegister = ({ setAlert, doctorRegister }) => {
       doctorRegister(newDoctor);
     }
   };
+
+  if (isAuthenticated) {
+    return <Redirect to='/doctor-dashboard' />;
+  }
 
   return (
     <Fragment>
@@ -108,6 +112,13 @@ const DoctorRegister = ({ setAlert, doctorRegister }) => {
 DoctorRegister.propTypes = {
   setAlert: PropTypes.func.isRequired,
   doctorRegister: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
 };
 
-export default connect(null, { setAlert, doctorRegister })(DoctorRegister);
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+
+export default connect(mapStateToProps, { setAlert, doctorRegister })(
+  DoctorRegister
+);

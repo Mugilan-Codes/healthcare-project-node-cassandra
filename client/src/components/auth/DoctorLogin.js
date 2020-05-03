@@ -1,7 +1,11 @@
 import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-const DoctorLogin = () => {
+import { doctorLogin } from '../../actions/auth';
+
+const DoctorLogin = ({ doctorLogin, isAuthenticated }) => {
   const [formData, setFormData] = useState({
     email: '',
     pwd: '',
@@ -15,8 +19,12 @@ const DoctorLogin = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    console.log('SUCCESS');
+    doctorLogin(email, pwd);
   };
+
+  if (isAuthenticated) {
+    return <Redirect to='/doctor-dashboard' />;
+  }
 
   return (
     <Fragment>
@@ -57,4 +65,13 @@ const DoctorLogin = () => {
   );
 };
 
-export default DoctorLogin;
+DoctorLogin.propTypes = {
+  doctorLogin: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
+};
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
+
+export default connect(mapStateToProps, { doctorLogin })(DoctorLogin);

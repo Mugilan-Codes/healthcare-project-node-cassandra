@@ -5,6 +5,8 @@ import {
   REGISTER_FAIL,
   USER_LOADED,
   AUTH_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
 } from './types';
 import { setAlert } from './alert';
 import setAuthToken from '../utils/setAuthToken';
@@ -50,6 +52,8 @@ export const register = ({
       type: REGISTER_SUCCESS,
       payload: res.data,
     });
+
+    dispatch(loadPatient());
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
@@ -57,6 +61,33 @@ export const register = ({
     }
 
     dispatch({ type: REGISTER_FAIL });
+  }
+};
+
+// Login Patient
+export const login = (email, pwd) => async (dispatch) => {
+  const config = { headers: { 'Content-Type': 'application/json' } };
+
+  const loginPatient = { email, pwd };
+
+  const body = JSON.stringify(loginPatient);
+
+  try {
+    const res = await axios.post('/patient/login', body, config);
+
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: res.data,
+    });
+
+    dispatch(loadPatient());
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({ type: LOGIN_FAIL });
   }
 };
 
@@ -95,6 +126,8 @@ export const doctorRegister = ({ d_name, spec, email, pwd }) => async (
       type: REGISTER_SUCCESS,
       payload: res.data,
     });
+
+    dispatch(loadDoctor());
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
@@ -102,5 +135,32 @@ export const doctorRegister = ({ d_name, spec, email, pwd }) => async (
     }
 
     dispatch({ type: REGISTER_FAIL });
+  }
+};
+
+// Login Doctor
+export const doctorLogin = (email, pwd) => async (dispatch) => {
+  const config = { headers: { 'Content-Type': 'application/json' } };
+
+  const loginDoctor = { email, pwd };
+
+  const body = JSON.stringify(loginDoctor);
+
+  try {
+    const res = await axios.post('/doctor/login', body, config);
+
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: res.data,
+    });
+
+    dispatch(loadDoctor());
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({ type: LOGIN_FAIL });
   }
 };
