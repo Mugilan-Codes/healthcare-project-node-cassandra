@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { setAlert } from '../../actions/alert';
+import { doctorRegister } from '../../actions/auth';
 
-const DoctorRegister = ({ setAlert }) => {
+const DoctorRegister = ({ setAlert, doctorRegister }) => {
   const [formData, setFormData] = useState({
     d_name: '',
     spec: '',
@@ -25,20 +26,9 @@ const DoctorRegister = ({ setAlert }) => {
     if (pwd !== pwd2) {
       setAlert('Passwords do not Match!', 'danger');
     } else {
-      // const newDoctor = { d_name, spec, email, pwd };
+      const newDoctor = { d_name, spec, email, pwd };
 
-      // try {
-      //   const config = { headers: { 'Content-Type': 'application/json' } };
-
-      //   const body = JSON.stringify(newDoctor);
-
-      //   const res = await axios.post('/doctor/register', body, config);
-
-      //   console.log(res.data);
-      // } catch (err) {
-      //   console.error(err.response.data);
-      // }
-      console.log('SUCCESS');
+      doctorRegister(newDoctor);
     }
   };
 
@@ -115,6 +105,9 @@ const DoctorRegister = ({ setAlert }) => {
   );
 };
 
-DoctorRegister.propTypes = { setAlert: PropTypes.func.isRequired };
+DoctorRegister.propTypes = {
+  setAlert: PropTypes.func.isRequired,
+  doctorRegister: PropTypes.func.isRequired,
+};
 
-export default connect(null, { setAlert })(DoctorRegister);
+export default connect(null, { setAlert, doctorRegister })(DoctorRegister);

@@ -4,7 +4,7 @@ const initialState = {
   token: localStorage.getItem('token'),
   isAuthenticated: null,
   loading: true,
-  user: null, // Patient
+  user: null, // Patient or Doctor
 };
 
 export default (state = initialState, action) => {
