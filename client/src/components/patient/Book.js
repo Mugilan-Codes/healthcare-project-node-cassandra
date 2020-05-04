@@ -10,16 +10,13 @@ const Book = ({ doctors, history, bookAppointment }) => {
 
   const id = history.location.pathname.substring(6);
 
-  const search = (nameKey, myArray) => {
-    for (let x of myArray) {
-      if (x.d_id === nameKey) return x;
-    }
-  };
-  const doctor = search(id, doctors);
-  // const doctor = doctors.find((doc) => doc.d_id === id);
-
-  // const onChange = (e) =>
-  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  // const search = (nameKey, myArray) => {
+  //   for (let x of myArray) {
+  //     if (x.d_id === nameKey) return x;
+  //   }
+  // };
+  // const doctor = search(id, doctors);
+  const doctor = doctors.find((doc) => doc.d_id === id);
 
   return (
     <Fragment>

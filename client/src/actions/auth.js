@@ -87,7 +87,7 @@ export const login = (email, pwd) => async (dispatch) => {
       role: PATIENT,
     });
 
-    dispatch(loadPatient());
+    // dispatch(loadPatient());
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {

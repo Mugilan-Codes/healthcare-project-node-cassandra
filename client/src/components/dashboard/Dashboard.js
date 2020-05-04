@@ -8,8 +8,13 @@ import Book from './Book';
 import Consult from './Consult';
 
 const Dashboard = ({ auth: { user, loading } }) => {
-  return loading && user === null ? (
-    <Spinner />
+  return loading || user === null ? (
+    <Fragment>
+      <Spinner />
+      <button className='btn' onClick={() => window.location.reload(false)}>
+        Click to reload!
+      </button>
+    </Fragment>
   ) : (
     <Fragment>
       <h1 className='large text-primary'>Dashboard</h1>

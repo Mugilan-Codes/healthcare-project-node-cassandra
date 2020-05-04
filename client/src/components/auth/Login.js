@@ -12,6 +12,10 @@ const Login = ({ login, isAuthenticated, role }) => {
     pwd: '',
   });
 
+  if (role === PATIENT && isAuthenticated) {
+    return <Redirect to='/dashboard' />;
+  }
+
   const { email, pwd } = formData;
 
   const onChange = (e) =>
@@ -22,10 +26,6 @@ const Login = ({ login, isAuthenticated, role }) => {
 
     login(email, pwd);
   };
-
-  if (role === PATIENT && isAuthenticated) {
-    return <Redirect to='/dashboard' />;
-  }
 
   return (
     <Fragment>
