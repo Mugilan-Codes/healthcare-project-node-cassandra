@@ -178,3 +178,14 @@ export const doctorLogin = (email, pwd) => async (dispatch) => {
 export const logout = () => (dispatch) => {
   dispatch({ type: LOGOUT });
 };
+
+// // Get Total Patients, Doctors & Admins in Doctor Landing Page
+// export const getTotal = () => async (dispatch) => {
+//   try {
+//     const res = await axios.get('/total');
+
+//     console.log(res);
+//   } catch (err) {
+//     console.error(err.message);
+//   }
+// };
