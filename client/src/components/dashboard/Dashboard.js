@@ -8,12 +8,12 @@ import Book from './Book';
 import Consult from './Consult';
 
 const Dashboard = ({ auth: { user, loading } }) => {
+  const reloadPage = () => window.location.reload(false);
+
   return loading || user === null ? (
     <Fragment>
       <Spinner />
-      <button className='btn' onClick={() => window.location.reload(false)}>
-        Click to reload!
-      </button>
+      {reloadPage()}
     </Fragment>
   ) : (
     <Fragment>
