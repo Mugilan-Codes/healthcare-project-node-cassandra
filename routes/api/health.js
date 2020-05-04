@@ -447,7 +447,7 @@ router.post(
       const b_id = uuid.random();
 
       const current_date = new Date();
-      console.log(current_date, new Date(doa));
+
       if (current_date > new Date(doa)) {
         return res.status(400).json({ msg: 'Date Should be in the future' });
       }

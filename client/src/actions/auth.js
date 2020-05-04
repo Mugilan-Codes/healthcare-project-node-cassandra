@@ -5,6 +5,7 @@ import {
   REGISTER_FAIL,
   USER_LOADED,
   AUTH_ERROR,
+  RELOAD_USER,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   PATIENT,
@@ -180,6 +181,35 @@ export const logout = () => (dispatch) => {
 };
 
 // Book Appointment
+export const bookAppointment = (d_id, doa, history) => async (dispatch) => {
+  const config = { headers: { 'Content-Type': 'application/json' } };
+
+  const book = { doa };
+
+  const body = JSON.stringify(book);
+
+  try {
+    const res = await axios.post(`/book/${d_id}`, body, config);
+    console.log(res);
+    dispatch({
+      type: RELOAD_USER,
+      payload: res.data,
+    });
+
+    dispatch(loadPatient());
+
+    dispatch(setAlert('Appointment Booked', 'success'));
+
+    history.push('/dashboard');
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({ type: AUTH_ERROR });
+  }
+};
 
 // Consult Doctor
 

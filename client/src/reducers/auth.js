@@ -3,6 +3,7 @@ import {
   REGISTER_FAIL,
   USER_LOADED,
   AUTH_ERROR,
+  RELOAD_USER,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
@@ -26,6 +27,11 @@ export default (state = initialState, action) => {
         isAuthenticated: true,
         loading: false,
         user: payload,
+      };
+    case RELOAD_USER:
+      return {
+        ...state,
+        ...payload,
       };
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:

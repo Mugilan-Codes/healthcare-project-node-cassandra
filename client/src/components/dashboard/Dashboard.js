@@ -79,7 +79,7 @@ const Dashboard = ({ auth: { user, loading } }) => {
       {user.consultations.length > 0 ? (
         <Consult consultation={user.consultations} />
       ) : (
-        <h2 class='my-2'>No Consultations</h2>
+        <h2 className='my-2'>No Consultations</h2>
       )}
     </Fragment>
   );
