@@ -1,11 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { useFetch } from '../../actions/hooks';
+import { DOCTOR } from '../../actions/types';
 
-const Landing = () => {
+const DoctorLanding = ({ isAuthenticated, role }) => {
   const [data] = useFetch('/total');
   const { totalPatients, totalDoctors } = data;
+
+  if (role === DOCTOR && isAuthenticated) {
+    return <Redirect to='/doctor-dashboard' />;
+  }
 
   return (
     <section className='doctor-landing'>
@@ -33,4 +40,14 @@ const Landing = () => {
   );
 };
 
-export default Landing;
+DoctorLanding.propTypes = {
+  isAuthenticated: PropTypes.bool,
+  role: PropTypes.string,
+};
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  role: state.auth.role,
+});
+
+export default connect(mapStateToProps)(DoctorLanding);

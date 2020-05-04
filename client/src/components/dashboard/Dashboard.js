@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import Spinner from '../layout/Spinner';
 
@@ -43,11 +44,11 @@ const Dashboard = ({ auth: { user, loading } }) => {
           <p>
             Address:{' '}
             <span>
-              {user.patient.addr !== null
-                ? user.patient.addr.length < 20
-                  ? user.patient.addr
-                  : 'Too Long to Display'
-                : '--Nil--'}
+              {user.patient.addr === null
+                ? '--Nil'
+                : user.patient.addr.length < 30
+                ? user.patient.addr
+                : 'Too Long to Display'}
             </span>
           </p>
           <p>
@@ -58,6 +59,14 @@ const Dashboard = ({ auth: { user, loading } }) => {
           </p>
         </div>
       </div>
+
+      {user.getAllDoctors.length > 0 && (
+        <div className='dash-buttons'>
+          <Link to='/home' className='btn'>
+            <i className='las la-clinic-medical text-primary' /> View Doctors
+          </Link>
+        </div>
+      )}
     </Fragment>
   );
 };
