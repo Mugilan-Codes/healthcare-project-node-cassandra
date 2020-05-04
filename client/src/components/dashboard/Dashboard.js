@@ -1,10 +1,23 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-const Dashboard = (props) => {
-  return <div>Patient Dashboard</div>;
+import Spinner from '../layout/Spinner';
+
+const Dashboard = ({ auth: { user, loading } }) => {
+  return loading && user === null ? (
+    <Spinner />
+  ) : (
+    <Fragment>Patient Dashboard</Fragment>
+  );
 };
 
-Dashboard.propTypes = {};
+Dashboard.propTypes = {
+  auth: PropTypes.object.isRequired,
+};
 
-export default Dashboard;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps)(Dashboard);
