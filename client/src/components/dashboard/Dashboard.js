@@ -2,9 +2,10 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Moment from 'react-moment';
 
 import Spinner from '../layout/Spinner';
+import Book from './Book';
+import Consult from './Consult';
 
 const Dashboard = ({ auth: { user, loading } }) => {
   return loading && user === null ? (
@@ -69,38 +70,17 @@ const Dashboard = ({ auth: { user, loading } }) => {
         </div>
       )}
 
-      <h2 class='my-2'>Booked Appointments</h2>
-      <table class='table'>
-        <thead>
-          <tr>
-            <th>Doctor</th>
-            <th class='hide-sm'>Specialization</th>
-            <th>Appointment Date</th>
-            <th class='hide-sm'>Booked On</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {user.bookedAppointments.length > 0 &&
-            user.bookedAppointments.map((book) => (
-              <tr>
-                <td>{book.d_name}</td>
-                <td class='hide-sm'>{book.spec}</td>
-                <td>
-                  <Moment format='Do MMM, YYYY'>{book.doa}</Moment>
-                </td>
-                <td class='hide-sm'>
-                  <Moment format='Do MMM, YYYY'>{book.time}</Moment>
-                </td>
-                <td>
-                  <button class='btn btn-danger'>
-                    <i class='las la-calendar-minus' />
-                  </button>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+      {user.bookedAppointments.length > 0 ? (
+        <Book bookings={user.bookedAppointments} />
+      ) : (
+        <h2 className='my-2'>No Booked Appointments</h2>
+      )}
+
+      {user.consultations.length > 0 ? (
+        <Consult consultation={user.consultations} />
+      ) : (
+        <h2 class='my-2'>No Consultations</h2>
+      )}
     </Fragment>
   );
 };
