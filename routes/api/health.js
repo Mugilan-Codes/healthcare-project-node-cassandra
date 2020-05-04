@@ -42,7 +42,7 @@ router.get('/list/doctors', async (req, res) => {
   try {
     const doctors = (await client.execute('SELECT * FROM doctor')).rows;
 
-    res.json({ doctors });
+    res.json(doctors);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
