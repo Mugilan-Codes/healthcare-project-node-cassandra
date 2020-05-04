@@ -13,8 +13,11 @@ const PatientNavbar = ({ auth: { isAuthenticated, role }, logout }) => {
         <Link to='/home'>Home</Link>
       </li>
       <li>
+        <Link to='/dashboard'>Dashboard</Link>
+      </li>
+      <li>
         <a href='#!' onClick={logout}>
-          <i className='las la-sign-out-alt'></i>
+          <i className='las la-sign-out-alt' />{' '}
           <span className='hide-sm'>Logout</span>
         </a>
       </li>
@@ -50,8 +53,12 @@ const DoctorNavbar = ({ auth: { isAuthenticated, role }, logout }) => {
   const authLinks = (
     <ul>
       <li>
+        <Link to='/doctor-dashboard'>Dashboard</Link>
+      </li>
+      <li>
         <a href='#!' onClick={logout}>
-          <i className='las la-sign-out-alt'></i> Logout
+          <i className='las la-sign-out-alt' />{' '}
+          <span className='hide-sm'>Logout</span>
         </a>
       </li>
     </ul>
