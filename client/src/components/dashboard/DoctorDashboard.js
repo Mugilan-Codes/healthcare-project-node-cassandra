@@ -3,10 +3,17 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import Spinner from '../layout/Spinner';
+import DoctorBook from './DoctorBook';
+import DoctorConsult from './DoctorConsult';
 
 const DoctorDashboard = ({ auth: { user, loading } }) => {
-  return loading && user === null ? (
-    <Spinner />
+  const reloadPage = () => window.location.reload(false);
+
+  return loading || user === null ? (
+    <Fragment>
+      <Spinner />
+      {reloadPage()}
+    </Fragment>
   ) : (
     <Fragment>
       <h1 className='large text-primary'>Dashboard</h1>
@@ -36,6 +43,25 @@ const DoctorDashboard = ({ auth: { user, loading } }) => {
           </p>
         </div>
       </div>
+
+      {user.appointments.length > 0 ? (
+        <DoctorBook appointments={user.appointments} />
+      ) : (
+        <h2 className='my-2'>No Appointments</h2>
+      )}
+
+      {user.consultations.length > 0 ? (
+        user.checks.length > 0 ? (
+          <DoctorConsult
+            consultations={user.consultations}
+            checks={user.checks}
+          />
+        ) : (
+          <DoctorConsult consultations={user.consultations} />
+        )
+      ) : (
+        <h2>No Consultations</h2>
+      )}
     </Fragment>
   );
 };

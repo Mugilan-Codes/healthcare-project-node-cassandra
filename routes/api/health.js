@@ -371,10 +371,19 @@ router.get('/doctor', doctor, async (req, res) => {
       )
     ).rows;
 
+    const checks = (
+      await client.execute(
+        'SELECT * FROM check_patient WHERE d_id = ? ALLOW FILTERING',
+        [d_id],
+        { prepare: true }
+      )
+    ).rows;
+
     res.json({
       doctor: { d_id, d_name, email, spec, pwd },
       appointments,
       consultations,
+      checks,
     });
   } catch (err) {
     console.error(err.message);
