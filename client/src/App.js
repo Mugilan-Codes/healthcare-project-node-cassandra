@@ -14,6 +14,8 @@ import DoctorDashboard from './components/dashboard/DoctorDashboard';
 import PrivateRoute from './components/routing/PrivateRoute';
 import DoctorPrivateRoute from './components/routing/DoctorPrivateRoute';
 import Doctors from './components/home/Doctors';
+import Book from './components/patient/Book';
+import Consult from './components/patient/Consult';
 // import Footer from './components/layout/Footer';
 
 // Redux
@@ -56,6 +58,8 @@ const App = () => {
                 path='/doctor-dashboard'
                 component={DoctorDashboard}
               />
+              <PrivateRoute exact path='/book/:d_id' component={Book} />
+              <PrivateRoute exact path='/consult/:d_id' component={Consult} />
             </Switch>
           </section>
           {/* <Footer /> */}
