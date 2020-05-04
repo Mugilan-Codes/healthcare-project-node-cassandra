@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Moment from 'react-moment';
 
 import Spinner from '../layout/Spinner';
 
@@ -67,6 +68,39 @@ const Dashboard = ({ auth: { user, loading } }) => {
           </Link>
         </div>
       )}
+
+      <h2 class='my-2'>Booked Appointments</h2>
+      <table class='table'>
+        <thead>
+          <tr>
+            <th>Doctor</th>
+            <th class='hide-sm'>Specialization</th>
+            <th>Appointment Date</th>
+            <th class='hide-sm'>Booked On</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {user.bookedAppointments.length > 0 &&
+            user.bookedAppointments.map((book) => (
+              <tr>
+                <td>{book.d_name}</td>
+                <td class='hide-sm'>{book.spec}</td>
+                <td>
+                  <Moment format='Do MMM, YYYY'>{book.doa}</Moment>
+                </td>
+                <td class='hide-sm'>
+                  <Moment format='Do MMM, YYYY'>{book.time}</Moment>
+                </td>
+                <td>
+                  <button class='btn btn-danger'>
+                    <i class='las la-calendar-minus' />
+                  </button>
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
     </Fragment>
   );
 };
