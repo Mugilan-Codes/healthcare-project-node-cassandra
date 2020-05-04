@@ -3,19 +3,45 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const DoctorConsult = ({ consultations, checks }) => {
+  const check = (cons) =>
+    checks.map((che) =>
+      che.cp_id === cons.cp_id ? (
+        <Fragment key={che.cp_id}>
+          <td className='hide-sm'>{che.result}</td>
+          <td className='hide-sm'>{che.status}</td>
+          <td>
+            <a href='#!' className='btn'>
+              Done
+            </a>
+          </td>
+        </Fragment>
+      ) : (
+        <td>No</td>
+      )
+    );
+
   const consultaion = consultations.map((cons) => (
     <tr key={cons.c_id}>
       <td>{cons.name}</td>
       <td className='hide-sm'>{cons.age}</td>
       <td className='hide-sm'>{cons.gender}</td>
       <td>{cons.days}</td>
-      <td className='hide-sm'>{cons.result}</td>
-      <td className='hide-sm'>{cons.status}</td>
-      <td>
-        <Link to={`/check-patient/${cons.c_id}`} className='btn btn-success'>
-          Consult
-        </Link>
-      </td>
+      {cons.cp_id ? (
+        check(cons)
+      ) : (
+        <Fragment>
+          <td className='hide-sm'>Nil</td>
+          <td className='hide-sm'>Nil</td>
+          <td>
+            <Link
+              to={`/check-patient/${cons.c_id}`}
+              className='btn btn-success'
+            >
+              Consult
+            </Link>
+          </td>
+        </Fragment>
+      )}
     </tr>
   ));
 
