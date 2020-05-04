@@ -40,7 +40,9 @@ router.get('/total', async (req, res) => {
 // @access  Public
 router.get('/list/doctors', async (req, res) => {
   try {
-    const doctors = (await client.execute('SELECT * FROM doctor')).rows;
+    const doctors = (
+      await client.execute('SELECT d_id, d_name, email, spec FROM doctor')
+    ).rows;
 
     res.json(doctors);
   } catch (err) {

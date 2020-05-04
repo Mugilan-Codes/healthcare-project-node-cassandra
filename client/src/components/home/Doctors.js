@@ -19,20 +19,17 @@ const Doctors = () => {
             <div key={d_id} className='profile bg-light'>
               <img
                 className='round-img'
-                src='https://picsum.photos/200'
+                src={`https://ui-avatars.com/api/?name=${d_name
+                  .replace(/\s\s+/g, ' ')
+                  .split('')
+                  .join('+')}&size=200`}
                 alt='img'
               />
 
               <div>
-                <h2>
-                  Doctor Name: <span>{d_name}</span>
-                </h2>
-                <p>
-                  Email: <span>{email}</span>
-                </p>
-                <p>
-                  Spec: <span>{spec}</span>
-                </p>
+                <h2>{d_name}</h2>
+                <p>{email}</p>
+                <p>{spec}</p>
               </div>
 
               <ul>
