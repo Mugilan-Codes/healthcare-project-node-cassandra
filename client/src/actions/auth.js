@@ -22,7 +22,7 @@ export const loadPatient = () => async (dispatch) => {
   }
 
   try {
-    const res = await axios.get('/patient');
+    const res = await axios.get('/api/health/patient');
 
     dispatch({
       type: USER_LOADED,
@@ -51,7 +51,7 @@ export const register = ({
   const body = JSON.stringify(newPatient);
 
   try {
-    const res = await axios.post('/patient/register', body, config);
+    const res = await axios.post('/api/health/patient/register', body, config);
 
     dispatch({
       type: REGISTER_SUCCESS,
@@ -79,7 +79,7 @@ export const login = (email, pwd) => async (dispatch) => {
   const body = JSON.stringify(loginPatient);
 
   try {
-    const res = await axios.post('/patient/login', body, config);
+    const res = await axios.post('/api/health/patient/login', body, config);
 
     dispatch({
       type: LOGIN_SUCCESS,
@@ -87,13 +87,13 @@ export const login = (email, pwd) => async (dispatch) => {
       role: PATIENT,
     });
 
-    // dispatch(loadPatient());
+    dispatch(loadPatient());
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
-
+    console.error(err.message);
     dispatch({ type: LOGIN_FAIL });
   }
 };
@@ -105,7 +105,7 @@ export const loadDoctor = () => async (dispatch) => {
   }
 
   try {
-    const res = await axios.get('/doctor');
+    const res = await axios.get('/api/health/doctor');
 
     dispatch({
       type: USER_LOADED,
@@ -128,7 +128,7 @@ export const doctorRegister = ({ d_name, spec, email, pwd }) => async (
   const body = JSON.stringify(newDoctor);
 
   try {
-    const res = await axios.post('/doctor/register', body, config);
+    const res = await axios.post('/api/health/doctor/register', body, config);
 
     dispatch({
       type: REGISTER_SUCCESS,
@@ -156,7 +156,7 @@ export const doctorLogin = (email, pwd) => async (dispatch) => {
   const body = JSON.stringify(loginDoctor);
 
   try {
-    const res = await axios.post('/doctor/login', body, config);
+    const res = await axios.post('/api/health/doctor/login', body, config);
 
     dispatch({
       type: LOGIN_SUCCESS,
@@ -189,8 +189,8 @@ export const bookAppointment = (d_id, doa, history) => async (dispatch) => {
   const body = JSON.stringify(book);
 
   try {
-    const res = await axios.post(`/book/${d_id}`, body, config);
-    console.log(res);
+    const res = await axios.post(`/api/health/book/${d_id}`, body, config);
+
     dispatch({
       type: RELOAD_USER,
       payload: res.data,
@@ -207,7 +207,9 @@ export const bookAppointment = (d_id, doa, history) => async (dispatch) => {
       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
 
-    dispatch({ type: AUTH_ERROR });
+    const msg = err.response.data.msg;
+    dispatch(setAlert(msg, 'danger'));
+    // dispatch({ type: AUTH_ERROR });
   }
 };
 

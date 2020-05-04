@@ -7,7 +7,7 @@ import { useFetch } from '../../actions/hooks';
 import { DOCTOR } from '../../actions/types';
 
 const DoctorLanding = ({ isAuthenticated, role }) => {
-  const [data] = useFetch('/total');
+  const [data] = useFetch('/api/health/total');
   const { totalPatients, totalDoctors } = data;
 
   if (role === DOCTOR && isAuthenticated) {

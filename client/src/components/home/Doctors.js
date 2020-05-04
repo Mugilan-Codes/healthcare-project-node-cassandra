@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useFetch } from '../../actions/hooks';
 
 const Doctors = () => {
-  const [doctors] = useFetch('/list/doctors');
+  const [doctors] = useFetch('/api/health/list/doctors');
 
   return (
     <Fragment>
