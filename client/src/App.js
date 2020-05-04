@@ -13,6 +13,7 @@ import Dashboard from './components/dashboard/Dashboard';
 import DoctorDashboard from './components/dashboard/DoctorDashboard';
 import PrivateRoute from './components/routing/PrivateRoute';
 import DoctorPrivateRoute from './components/routing/DoctorPrivateRoute';
+import Doctors from './components/home/Doctors';
 // import Footer from './components/layout/Footer';
 
 // Redux
@@ -48,6 +49,7 @@ const App = () => {
               <Route exact path='/login' component={Login} />
               <Route exact path='/doctor-register' component={DoctorRegister} />
               <Route exact path='/doctor-login' component={DoctorLogin} />
+              <Route exact path='/home' component={Doctors} />
               <PrivateRoute exact path='/dashboard' component={Dashboard} />
               <DoctorPrivateRoute
                 exact

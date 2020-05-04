@@ -8,10 +8,7 @@ import { PATIENT, DOCTOR } from '../../actions/types';
 
 const PatientNavbar = ({ auth: { isAuthenticated, role }, logout }) => {
   const authLinks = (
-    <ul>
-      <li>
-        <Link to='/home'>Home</Link>
-      </li>
+    <Fragment>
       <li>
         <Link to='/dashboard'>Dashboard</Link>
       </li>
@@ -21,18 +18,18 @@ const PatientNavbar = ({ auth: { isAuthenticated, role }, logout }) => {
           <span className='hide-sm'>Logout</span>
         </a>
       </li>
-    </ul>
+    </Fragment>
   );
 
   const guestLinks = (
-    <ul>
+    <Fragment>
       <li>
         <Link to='/login'>Login</Link>
       </li>
       <li>
         <Link to='/register'>Register</Link>
       </li>
-    </ul>
+    </Fragment>
   );
 
   return (
@@ -43,7 +40,12 @@ const PatientNavbar = ({ auth: { isAuthenticated, role }, logout }) => {
         </Link>
       </h1>
       <Fragment>
-        {role === PATIENT && isAuthenticated ? authLinks : guestLinks}
+        <ul>
+          <li>
+            <Link to='/home'>Home</Link>
+          </li>
+          {role === PATIENT && isAuthenticated ? authLinks : guestLinks}
+        </ul>
       </Fragment>
     </nav>
   );

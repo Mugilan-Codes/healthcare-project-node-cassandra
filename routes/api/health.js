@@ -35,6 +35,20 @@ router.get('/total', async (req, res) => {
   }
 });
 
+// @route   GET api/health/list/doctors
+// @desc    List all Doctors
+// @access  Public
+router.get('/list/doctors', async (req, res) => {
+  try {
+    const doctors = (await client.execute('SELECT * FROM doctor')).rows;
+
+    res.json({ doctors });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // @route   GET api/health/admin
 // @desc    List all Table Details
 // @access  Private
