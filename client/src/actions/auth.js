@@ -255,3 +255,29 @@ export const consultDoctor = (d_id, formData, history) => async (dispatch) => {
 };
 
 // Check Patient
+export const checkPatient = (c_id, formData, history) => async (dispatch) => {
+  const config = { headers: { 'Content-Type': 'application/json' } };
+
+  try {
+    const res = await axios.post(`/api/health/check/${c_id}`, formData, config);
+
+    dispatch({
+      type: RELOAD_USER,
+      payload: res.data,
+    });
+
+    dispatch(loadDoctor());
+
+    dispatch(setAlert('Patient Checked', 'success'));
+
+    history.push('/doctor-dashboard');
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    const msg = err.response.data.msg;
+    dispatch(setAlert(msg, 'danger'));
+  }
+};

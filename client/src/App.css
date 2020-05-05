@@ -549,8 +549,8 @@ footer span {
 }
 
 .check-profile {
-  -ms-grid-columns: 2fr 2fr 4fr;
-  grid-template-columns: 2fr 2fr 4fr;
+  -ms-grid-columns: 3fr 5fr;
+  grid-template-columns: 3fr 5fr;
 }
 
 .profile-grid {
