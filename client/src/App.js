@@ -6,6 +6,7 @@ import Landing from './components/layout/Landing';
 import DoctorLanding from './components/layout/DoctorLanding';
 import Routes from './components/routing/Routes';
 import Footer from './components/layout/Footer';
+import { ScrollToTop } from './components/routing/ScrollToTop';
 
 // Redux
 import { Provider } from 'react-redux';
@@ -30,6 +31,7 @@ const App = () => {
     <Provider store={store}>
       <Router>
         <Fragment>
+          <ScrollToTop />
           <Navbar />
           <Switch>
             <Route exact path='/' component={Landing} />
