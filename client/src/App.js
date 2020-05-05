@@ -5,7 +5,7 @@ import Navbar from './components/layout/Navbar';
 import Landing from './components/layout/Landing';
 import DoctorLanding from './components/layout/DoctorLanding';
 import Routes from './components/routing/Routes';
-// import Footer from './components/layout/Footer';
+import Footer from './components/layout/Footer';
 
 // Redux
 import { Provider } from 'react-redux';
@@ -36,7 +36,7 @@ const App = () => {
             <Route exact path='/doctor' component={DoctorLanding} />
             <Route component={Routes} />
           </Switch>
-          {/* <Footer /> */}
+          <Footer />
         </Fragment>
       </Router>
     </Provider>
