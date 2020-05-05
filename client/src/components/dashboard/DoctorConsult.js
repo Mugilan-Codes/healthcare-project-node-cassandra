@@ -67,8 +67,8 @@ const DoctorConsult = ({ consultations, checks }) => {
 };
 
 DoctorConsult.propTypes = {
-  consultations: PropTypes.array.isRequired,
-  checks: PropTypes.array.isRequired,
+  consultations: PropTypes.array,
+  checks: PropTypes.array,
 };
 
 export default DoctorConsult;

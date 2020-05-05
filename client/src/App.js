@@ -17,6 +17,7 @@ import Doctors from './components/home/Doctors';
 import Book from './components/patient/Book';
 import Consult from './components/patient/Consult';
 import Check from './components/doctor/Check';
+import ViewConsult from './components/patient/ViewConsult';
 // import Footer from './components/layout/Footer';
 
 // Redux
@@ -65,6 +66,11 @@ const App = () => {
                 exact
                 path='/check-patient/:c_id'
                 component={Check}
+              />
+              <PrivateRoute
+                exact
+                path='/view-consult/:cp_id'
+                component={ViewConsult}
               />
             </Switch>
           </section>

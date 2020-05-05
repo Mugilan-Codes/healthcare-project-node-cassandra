@@ -92,7 +92,10 @@ const DoctorNavbar = ({ auth: { isAuthenticated, role }, logout }) => {
 };
 
 const Navbar = ({ location, auth, logout }) => {
-  if (location.pathname.match(/doctor/))
+  if (
+    location.pathname.match(/doctor/) ||
+    location.pathname.match(/check-patient/)
+  )
     return <DoctorNavbar auth={auth} logout={logout} />;
   if (location.pathname.match())
     return <PatientNavbar auth={auth} logout={logout} />;
