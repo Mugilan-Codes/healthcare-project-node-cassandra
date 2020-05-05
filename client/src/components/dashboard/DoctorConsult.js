@@ -3,12 +3,25 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const DoctorConsult = ({ consultations, checks }) => {
-  const check = (cons) =>
-    checks.map((che) =>
-      che.cp_id === cons.cp_id ? (
-        <Fragment key={che.cp_id}>
-          <td className='hide-sm'>{che.result}</td>
-          <td className='hide-sm'>{che.status}</td>
+  let merged = [];
+
+  for (let i = 0; i < consultations.length; i++) {
+    merged.push({
+      ...consultations[i],
+      ...checks.find((itmInner) => itmInner.cp_id === consultations[i].cp_id),
+    });
+  }
+
+  const consultation = merged.map((item) => (
+    <tr key={item.c_id}>
+      <td>{item.name}</td>
+      <td className='hide-sm'>{item.age}</td>
+      <td className='hide-sm'>{item.gender}</td>
+      <td>{item.days}</td>
+      {item.cp_id ? (
+        <Fragment>
+          <td className='hide-sm'>{item.result}</td>
+          <td className='hide-sm'>{item.status}</td>
           <td>
             <a href='#!' className='btn'>
               Done
@@ -16,25 +29,12 @@ const DoctorConsult = ({ consultations, checks }) => {
           </td>
         </Fragment>
       ) : (
-        <td>No</td>
-      )
-    );
-
-  const consultaion = consultations.map((cons) => (
-    <tr key={cons.c_id}>
-      <td>{cons.name}</td>
-      <td className='hide-sm'>{cons.age}</td>
-      <td className='hide-sm'>{cons.gender}</td>
-      <td>{cons.days}</td>
-      {cons.cp_id ? (
-        check(cons)
-      ) : (
         <Fragment>
           <td className='hide-sm'>Nil</td>
           <td className='hide-sm'>Nil</td>
           <td>
             <Link
-              to={`/check-patient/${cons.c_id}`}
+              to={`/check-patient/${item.c_id}`}
               className='btn btn-success'
             >
               Consult
@@ -60,7 +60,7 @@ const DoctorConsult = ({ consultations, checks }) => {
             <th></th>
           </tr>
         </thead>
-        <tbody>{consultaion}</tbody>
+        <tbody>{consultation}</tbody>
       </table>
     </Fragment>
   );
