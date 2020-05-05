@@ -12,13 +12,13 @@ const Footer = () => {
           <Link to='/doctor'>Doctor</Link>
         </li>
         <li className='hide-sm'>
-          <Link to='#!'>Admin</Link>
+          <Link to='/admin'>Admin</Link>
         </li>
         <li>
-          <Link to='#!'>News</Link>
+          <Link to='/news'>News</Link>
         </li>
         <li>
-          <Link to='#!'>About</Link>
+          <Link to='/about'>About</Link>
         </li>
       </ul>
       <span>Copyright 1999-2020, MugilanCodes</span>
