@@ -584,13 +584,17 @@ router.post(
 
       const checkForDuplicate = (
         await client.execute(
-          'SELECT * FROM consult_doctor WHERE p_id = ? AND consulted_on = ? ALLOW FILTERING',
-          [id, consulted_on],
+          'SELECT * FROM consult_doctor WHERE p_id = ? AND d_id = ? AND consulted_on = ? ALLOW FILTERING',
+          [id, req.params.d_id, consulted_on],
           { prepare: true }
         )
       ).rows[0];
       if (checkForDuplicate)
-        return res.status(400).json({ msg: 'Already Consulted' });
+        return res
+          .status(400)
+          .json({
+            msg: 'Already Consulted, Try Another Day or With Another Doctor',
+          });
 
       await client.execute(
         'INSERT INTO consult_doctor ( c_id, p_id, name, age, gender, d_id, d_name, spec, symptoms, affected_area, additional_info, days, consulted_on ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ;',

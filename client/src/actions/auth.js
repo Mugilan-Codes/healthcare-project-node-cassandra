@@ -214,5 +214,35 @@ export const bookAppointment = (d_id, doa, history) => async (dispatch) => {
 };
 
 // Consult Doctor
+export const consultDoctor = (d_id, formData, history) => async (dispatch) => {
+  const config = { headers: { 'Content-Type': 'application/json' } };
+
+  try {
+    const res = await axios.post(
+      `/api/health/consult/${d_id}`,
+      formData,
+      config
+    );
+
+    dispatch({
+      type: RELOAD_USER,
+      payload: res.data,
+    });
+
+    dispatch(loadPatient());
+
+    dispatch(setAlert('Consultation Requested', 'success'));
+
+    history.push('/dashboard');
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    const msg = err.response.data.msg;
+    dispatch(setAlert(msg, 'danger'));
+  }
+};
 
 // Check Patient
