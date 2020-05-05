@@ -11,6 +11,7 @@ import {
   PATIENT,
   DOCTOR,
   LOGOUT,
+  CHANGE_ROLES,
 } from './types';
 import { setAlert } from './alert';
 import setAuthToken from '../utils/setAuthToken';
@@ -51,6 +52,8 @@ export const register = ({
   const body = JSON.stringify(newPatient);
 
   try {
+    dispatch({ type: CHANGE_ROLES });
+
     const res = await axios.post('/api/health/patient/register', body, config);
 
     dispatch({
@@ -79,6 +82,8 @@ export const login = (email, pwd) => async (dispatch) => {
   const body = JSON.stringify(loginPatient);
 
   try {
+    dispatch({ type: CHANGE_ROLES });
+
     const res = await axios.post('/api/health/patient/login', body, config);
 
     dispatch({
@@ -93,7 +98,7 @@ export const login = (email, pwd) => async (dispatch) => {
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
-    console.error(err.message);
+
     dispatch({ type: LOGIN_FAIL });
   }
 };
@@ -128,6 +133,8 @@ export const doctorRegister = ({ d_name, spec, email, pwd }) => async (
   const body = JSON.stringify(newDoctor);
 
   try {
+    dispatch({ type: CHANGE_ROLES });
+
     const res = await axios.post('/api/health/doctor/register', body, config);
 
     dispatch({
@@ -156,6 +163,8 @@ export const doctorLogin = (email, pwd) => async (dispatch) => {
   const body = JSON.stringify(loginDoctor);
 
   try {
+    dispatch({ type: CHANGE_ROLES });
+
     const res = await axios.post('/api/health/doctor/login', body, config);
 
     dispatch({

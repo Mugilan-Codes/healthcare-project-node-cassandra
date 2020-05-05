@@ -13,7 +13,7 @@ const Consult = ({ doctors, history, consultDoctor }) => {
     days: '',
   });
 
-  const id = history.location.pathname.substring(9);
+  const id = history.location.pathname.substring(9); // history.location.pathname.replace('/consult/', '')
   const doctor = doctors.find((doc) => doc.d_id === id);
 
   const { symptoms, affected_area, additional_info, days } = formData;

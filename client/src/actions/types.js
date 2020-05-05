@@ -14,3 +14,4 @@ export const LOGOUT = 'LOGOUT';
 
 export const PATIENT = 'PATIENT';
 export const DOCTOR = 'DOCTOR';
+export const CHANGE_ROLES = 'CHANGE_ROLES';

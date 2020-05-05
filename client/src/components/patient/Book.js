@@ -8,7 +8,7 @@ import { bookAppointment } from '../../actions/auth';
 const Book = ({ doctors, history, bookAppointment }) => {
   const [doa, setDoa] = useState('');
 
-  const id = history.location.pathname.substring(6);
+  const id = history.location.pathname.substring(6); // history.location.pathname.replace('/book/', '')
 
   // const search = (nameKey, myArray) => {
   //   for (let x of myArray) {

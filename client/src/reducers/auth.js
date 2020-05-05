@@ -7,6 +7,7 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
+  CHANGE_ROLES,
 } from '../actions/types';
 
 const initialState = {
@@ -32,6 +33,15 @@ export default (state = initialState, action) => {
       return {
         ...state,
         ...payload,
+      };
+    case CHANGE_ROLES:
+      localStorage.removeItem('token');
+      localStorage.removeItem('role');
+      return {
+        ...state,
+        token: null,
+        user: null,
+        role: null,
       };
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
