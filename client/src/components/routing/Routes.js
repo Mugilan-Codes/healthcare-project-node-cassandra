@@ -17,6 +17,7 @@ import Check from '../doctor/Check';
 import ViewConsult from '../patient/ViewConsult';
 import About from '../layout/About';
 import NotFound from '../layout/NotFound';
+import News from '../layout/News';
 
 const Routes = () => {
   return (
@@ -47,6 +48,7 @@ const Routes = () => {
           path='/view-consult/:cp_id'
           component={ViewConsult}
         />
+        <Route exact path='/news' component={News} />
         <Route component={NotFound} />
       </Switch>
     </section>
