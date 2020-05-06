@@ -52,7 +52,7 @@ const Dashboard = ({ auth: { user, loading } }) => {
             Address:{' '}
             <span>
               {user.patient.addr === null
-                ? '--Nil'
+                ? '--Nil--'
                 : user.patient.addr.length < 30
                 ? user.patient.addr
                 : 'Too Long to Display'}

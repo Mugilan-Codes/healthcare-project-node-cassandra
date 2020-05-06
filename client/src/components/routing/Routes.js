@@ -15,6 +15,7 @@ import Book from '../patient/Book';
 import Consult from '../patient/Consult';
 import Check from '../doctor/Check';
 import ViewConsult from '../patient/ViewConsult';
+import About from '../layout/About';
 import NotFound from '../layout/NotFound';
 
 const Routes = () => {
@@ -22,6 +23,7 @@ const Routes = () => {
     <section className='container'>
       <Alert />
       <Switch>
+        <Route exact path='/about' component={About} />
         <Route exact path='/register' component={Register} />
         <Route exact path='/login' component={Login} />
         <Route exact path='/doctor-register' component={DoctorRegister} />
