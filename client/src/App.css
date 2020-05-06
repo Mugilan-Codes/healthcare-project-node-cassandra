@@ -556,8 +556,8 @@ footer span {
 }
 
 .news-profile {
-  -ms-grid-columns: 1fr 4fr 2fr;
-  grid-template-columns: 1fr 4fr 2fr;
+  -ms-grid-columns: fr 4fr 2fr;
+  grid-template-columns: fr 4fr 2fr;
 }
 
 .profile-grid {
