@@ -91,7 +91,36 @@ const DoctorNavbar = ({ auth: { isAuthenticated, role }, logout }) => {
   );
 };
 
+const GuestNavbar = () => (
+  <nav className='navbar bg-dark'>
+    <h1>
+      <Link to='/about'>
+        <i className='las la-heartbeat'></i> HealthCare 360
+      </Link>
+    </h1>
+    <ul>
+      <li>
+        <Link to='/'>Patient</Link>
+      </li>
+      <li>
+        <Link to='/doctor'>Doctor</Link>
+      </li>
+      <li>
+        <Link to='/admin'>Admin</Link>
+      </li>
+    </ul>
+  </nav>
+);
+
 const Navbar = ({ location, auth, logout }) => {
+  //todo Make Admin and News Page and Navbar relating to it
+  if (
+    location.pathname.match(/about/) ||
+    location.pathname.match(/admin/) ||
+    location.pathname.match(/news/)
+  ) {
+    return <GuestNavbar />;
+  }
   if (
     location.pathname.match(/doctor/) ||
     location.pathname.match(/check-patient/)
