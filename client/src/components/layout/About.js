@@ -60,6 +60,7 @@ const About = () => {
             <div>
               <h2>Mugilan</h2>
               <p>mugilancodes@gmail.com</p>
+              <p>Coder</p>
             </div>
 
             <ul>
@@ -91,6 +92,7 @@ const About = () => {
             <div>
               <h2>Nivethithaa</h2>
               <p>nivethithaaathithan75@gmail.com</p>
+              <p>Database</p>
             </div>
 
             <ul>
@@ -121,8 +123,27 @@ const About = () => {
 
             <div>
               <h2>Sasi Kiran</h2>
-              <p>Unknown</p>
+              <p>sasikiran@gmail.com</p>
+              <p>Database</p>
             </div>
+
+            <ul>
+              <li>
+                <a href='#!'>
+                  <i className='lab la-linkedin la-2x'></i>
+                </a>
+              </li>
+              <li className='hide-sm'>
+                <a href='#!'>
+                  <i className='lab la-instagram la-2x'></i>
+                </a>
+              </li>
+              <li>
+                <a href='#!'>
+                  <i className='lab la-github la-2x'></i>
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
