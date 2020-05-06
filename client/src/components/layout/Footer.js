@@ -21,7 +21,7 @@ const Footer = () => {
           <Link to='/about'>About</Link>
         </li>
       </ul>
-      <span>Copyright 1999-2020, MugilanCodes</span>
+      <span>Copyright 2019-2022, HealthCare 360</span>
     </footer>
   );
 };

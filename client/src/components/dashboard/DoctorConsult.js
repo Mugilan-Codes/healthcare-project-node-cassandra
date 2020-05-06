@@ -5,11 +5,15 @@ import { Link } from 'react-router-dom';
 const DoctorConsult = ({ consultations, checks }) => {
   let merged = [];
 
-  for (let i = 0; i < consultations.length; i++) {
-    merged.push({
-      ...consultations[i],
-      ...checks.find((itmInner) => itmInner.cp_id === consultations[i].cp_id),
-    });
+  if (checks !== undefined) {
+    for (let i = 0; i < consultations.length; i++) {
+      merged.push({
+        ...consultations[i],
+        ...checks.find((itmInner) => itmInner.cp_id === consultations[i].cp_id),
+      });
+    }
+  } else {
+    merged.push(...consultations);
   }
 
   const consultation = merged.map((item) => (
@@ -18,7 +22,7 @@ const DoctorConsult = ({ consultations, checks }) => {
       <td className='hide-sm'>{item.age}</td>
       <td className='hide-sm'>{item.gender}</td>
       <td>{item.days}</td>
-      {item.cp_id ? (
+      {item.cp_id !== null ? (
         <Fragment>
           <td className='hide-sm'>{item.result}</td>
           <td className='hide-sm'>{item.status}</td>
