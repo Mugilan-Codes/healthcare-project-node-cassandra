@@ -169,6 +169,19 @@
   color: #333;
 }
 
+.admin {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
 .x-large {
   font-size: 4rem;
   line-height: 1.2;
@@ -560,6 +573,36 @@ footer span {
   grid-template-columns: fr 4fr 2fr;
 }
 
+.admin-profile {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 50%;
+  padding: 1rem;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  text-align: center;
+}
+
+.admin-profile img {
+  width: 10rem;
+  height: 10rem;
+}
+
+.admin-display {
+  width: 50%;
+  text-align: center;
+  line-height: 1.8;
+}
+
 .profile-grid {
   display: -ms-grid;
   display: grid;
@@ -698,5 +741,25 @@ footer span {
   }
   .profile-grid h2 {
     text-align: center;
+  }
+  .admin {
+    display: -ms-grid;
+    display: grid;
+    text-align: center;
+  }
+  .admin-profile {
+    width: 100%;
+    -ms-grid-columns: 1fr;
+    grid-template-columns: 1fr;
+  }
+  .admin .dash-buttons {
+    -ms-grid-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+  }
+  .admin .dash-buttons i {
+    font-size: 2rem;
+  }
+  .admin-display {
+    width: 100%;
   }
 }
