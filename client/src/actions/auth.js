@@ -12,9 +12,59 @@ import {
   DOCTOR,
   LOGOUT,
   CHANGE_ROLES,
+  ADMIN,
 } from './types';
 import { setAlert } from './alert';
 import setAuthToken from '../utils/setAuthToken';
+
+// Load Admin
+export const loadAdmin = () => async (dispatch) => {
+  if (localStorage.token) {
+    setAuthToken(localStorage.token);
+  }
+
+  try {
+    const res = await axios.get('api/health/admin');
+
+    dispatch({
+      type: USER_LOADED,
+      payload: res.data,
+      // role: PATIENT,
+    });
+  } catch (err) {
+    dispatch({ type: AUTH_ERROR });
+  }
+};
+
+// Login Admin
+export const login = (email, pwd) => async (dispatch) => {
+  const config = { headers: { 'Content-Type': 'application/json' } };
+
+  const loginPatient = { email, pwd };
+
+  const body = JSON.stringify(loginPatient);
+
+  try {
+    dispatch({ type: CHANGE_ROLES });
+
+    const res = await axios.post('api/health/admin/login', body, config);
+
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: res.data,
+      role: ADMIN,
+    });
+
+    dispatch(loadAdmin());
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({ type: LOGIN_FAIL });
+  }
+};
 
 // Load Patient
 export const loadPatient = () => async (dispatch) => {
