@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { logout } from '../../actions/auth';
-import { PATIENT, DOCTOR } from '../../actions/types';
+import { PATIENT, DOCTOR, ADMIN } from '../../actions/types';
 
 const PatientNavbar = ({ auth: { isAuthenticated, role }, logout }) => {
   const authLinks = (
@@ -91,6 +91,49 @@ const DoctorNavbar = ({ auth: { isAuthenticated, role }, logout }) => {
   );
 };
 
+const AdminNavbar = ({ auth: { isAuthenticated, role }, logout }) => {
+  const authLinks = (
+    <ul>
+      <li>
+        <Link to='/admin-dashboard'>Dashboard</Link>
+      </li>
+      <li>
+        <a href='#!' onClick={logout}>
+          <i className='las la-sign-out-alt' />{' '}
+          <span className='hide-sm'>Logout</span>
+        </a>
+      </li>
+    </ul>
+  );
+
+  const guestLinks = (
+    <ul>
+      <li>
+        <Link to='/'>Patient</Link>
+      </li>
+      <li>
+        <Link to='/doctor'>Doctor</Link>
+      </li>
+      <li>
+        <Link to='/admin'>Admin</Link>
+      </li>
+    </ul>
+  );
+
+  return (
+    <nav className='navbar bg-dark'>
+      <h1>
+        <Link to='/admin'>
+          <i className='las la-heartbeat'></i> HealthCare 360
+        </Link>
+      </h1>
+      <Fragment>
+        {role === ADMIN && isAuthenticated ? authLinks : guestLinks}
+      </Fragment>
+    </nav>
+  );
+};
+
 const GuestNavbar = () => (
   <nav className='navbar bg-dark'>
     <h1>
@@ -114,12 +157,11 @@ const GuestNavbar = () => (
 
 const Navbar = ({ location, auth, logout }) => {
   //todo Make Admin and News Page and Navbar relating to it
-  if (
-    location.pathname.match(/about/) ||
-    location.pathname.match(/admin/) ||
-    location.pathname.match(/news/)
-  ) {
+  if (location.pathname.match(/about/) || location.pathname.match(/news/)) {
     return <GuestNavbar />;
+  }
+  if (location.pathname.match(/admin/)) {
+    return <AdminNavbar auth={auth} logout={logout} />;
   }
   if (
     location.pathname.match(/doctor/) ||
