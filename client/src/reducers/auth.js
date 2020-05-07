@@ -15,7 +15,7 @@ const initialState = {
   isAuthenticated: null,
   loading: true,
   user: null,
-  role: localStorage.getItem('role'), // Patient or Doctor
+  role: localStorage.getItem('role'), // Patient or Doctor or Admin
 };
 
 export default (state = initialState, action) => {

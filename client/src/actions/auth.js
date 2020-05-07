@@ -29,7 +29,7 @@ export const loadAdmin = () => async (dispatch) => {
     dispatch({
       type: USER_LOADED,
       payload: res.data,
-      // role: PATIENT,
+      // role: ADMIN,
     });
   } catch (err) {
     dispatch({ type: AUTH_ERROR });
