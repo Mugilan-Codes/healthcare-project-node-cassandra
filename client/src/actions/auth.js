@@ -37,7 +37,7 @@ export const loadAdmin = () => async (dispatch) => {
 };
 
 // Login Admin
-export const login = (email, pwd) => async (dispatch) => {
+export const adminLogin = (email, pwd) => async (dispatch) => {
   const config = { headers: { 'Content-Type': 'application/json' } };
 
   const loginPatient = { email, pwd };

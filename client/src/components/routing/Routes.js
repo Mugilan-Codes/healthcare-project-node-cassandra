@@ -18,7 +18,7 @@ import ViewConsult from '../patient/ViewConsult';
 import About from '../layout/About';
 import NotFound from '../layout/NotFound';
 import News from '../layout/News';
-import Admin from '../auth/AdminLogin';
+import AdminLogin from '../auth/AdminLogin';
 import AdminPrivateRoute from './AdminPrivateRoute';
 import AdminDashboard from '../dashboard/AdminDashboard';
 
@@ -33,7 +33,7 @@ const Routes = () => {
         <Route exact path='/doctor-register' component={DoctorRegister} />
         <Route exact path='/doctor-login' component={DoctorLogin} />
         <Route exact path='/home' component={Doctors} />
-        <Route exact path='/admin' component={Admin} />
+        <Route exact path='/admin' component={AdminLogin} />
         <AdminPrivateRoute
           exact
           path='/admin-dashboard'
