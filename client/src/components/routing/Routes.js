@@ -58,6 +58,8 @@ const Routes = () => {
           component={ViewConsult}
         />
         <Route exact path='/news' component={News} />
+        <AdminPrivateRoute exact path='/admin-patients' />
+        <AdminPrivateRoute exact path='/admin-doctors' />
         <Route component={NotFound} />
       </Switch>
     </section>
