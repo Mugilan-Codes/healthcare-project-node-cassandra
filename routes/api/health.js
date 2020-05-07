@@ -56,28 +56,27 @@ router.get('/list/doctors', async (req, res) => {
 // @access  Private
 router.get('/admin', admin, async (req, res) => {
   try {
-    // @todo  Need More Work on Admin
+    //todo  Need More Work on Admin
     const currentAdmin = (
       await client.execute(
         'SELECT name, email, id FROM admin WHERE email = ?',
         [req.email],
         { prepare: true }
       )
-    ).rows;
+    ).rows[0];
+
     const listAdmins = (await client.execute('SELECT name, email FROM admin'))
       .rows;
+
     const listPatients = (await client.execute('SELECT * FROM patient')).rows;
+
     const listDoctors = (await client.execute('SELECT * FROM doctor')).rows;
-    const listAppointments = (
-      await client.execute('SELECT * FROM book_appointment')
-    ).rows;
 
     res.json({
       currentAdmin,
       listAdmins,
       listPatients,
       listDoctors,
-      listAppointments,
     });
   } catch (err) {
     console.error(err.message);
@@ -590,11 +589,9 @@ router.post(
         )
       ).rows[0];
       if (checkForDuplicate)
-        return res
-          .status(400)
-          .json({
-            msg: 'Already Consulted, Try Another Day or With Another Doctor',
-          });
+        return res.status(400).json({
+          msg: 'Already Consulted, Try Another Day or With Another Doctor',
+        });
 
       await client.execute(
         'INSERT INTO consult_doctor ( c_id, p_id, name, age, gender, d_id, d_name, spec, symptoms, affected_area, additional_info, days, consulted_on ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ;',

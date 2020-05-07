@@ -1,10 +1,30 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-const AdminDashboard = (props) => {
-  return <div>ADMIN DASHBOARD</div>;
+import Spinner from '../layout/Spinner';
+
+const AdminDashboard = ({ auth: { user, loading } }) => {
+  return loading || user === null ? (
+    <Fragment>
+      <Spinner />
+    </Fragment>
+  ) : (
+    <Fragment>
+      <h1 class='large text-primary'>Welcome to Admin Dashboard</h1>
+      <p class='lead'>
+        <i class='las la-hospital'></i>Welcome, {user.currentAdmin.name}
+      </p>
+    </Fragment>
+  );
 };
 
-AdminDashboard.propTypes = {};
+AdminDashboard.propTypes = {
+  auth: PropTypes.object.isRequired,
+};
 
-export default AdminDashboard;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps)(AdminDashboard);

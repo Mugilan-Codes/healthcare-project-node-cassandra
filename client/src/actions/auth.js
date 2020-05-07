@@ -24,7 +24,7 @@ export const loadAdmin = () => async (dispatch) => {
   }
 
   try {
-    const res = await axios.get('api/health/admin');
+    const res = await axios.get('/api/health/admin');
 
     dispatch({
       type: USER_LOADED,
@@ -40,14 +40,14 @@ export const loadAdmin = () => async (dispatch) => {
 export const adminLogin = (email, pwd) => async (dispatch) => {
   const config = { headers: { 'Content-Type': 'application/json' } };
 
-  const loginPatient = { email, pwd };
+  const loginAdmin = { email, pwd };
 
-  const body = JSON.stringify(loginPatient);
+  const body = JSON.stringify(loginAdmin);
 
   try {
     dispatch({ type: CHANGE_ROLES });
 
-    const res = await axios.post('api/health/admin/login', body, config);
+    const res = await axios.post('/api/health/admin/login', body, config);
 
     dispatch({
       type: LOGIN_SUCCESS,
