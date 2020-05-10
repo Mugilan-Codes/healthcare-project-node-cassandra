@@ -52,10 +52,29 @@ const News = () => {
     </div>
   ));
 
+  const pStyle = {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    textAlign: 'center',
+    fontSize: '0.7rem',
+  };
+
+  const aStyle = {
+    margin: 3,
+    fontSize: '0.9rem',
+  };
+
   return (
     <Fragment>
       <h1 className='text-primary my-1'>Latest Healthcare News in India</h1>
       {articles}
+      <p style={pStyle}>
+        Live News fetched from{' '}
+        <a style={aStyle} href='https://newsapi.org/'>
+          NewsAPI
+        </a>
+      </p>
     </Fragment>
   );
 };

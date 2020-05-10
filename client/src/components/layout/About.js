@@ -44,6 +44,8 @@ const About = () => {
           <a
             className='btn btn-primary my-1'
             href='https://github.com/Mugilan-Codes/healthcare-project-node-cassandra'
+            target='_blank'
+            rel='noopener noreferrer'
           >
             Link To Repo
           </a>
@@ -65,17 +67,29 @@ const About = () => {
 
             <ul>
               <li>
-                <a href='https://www.linkedin.com/in/mugilan-codes/'>
+                <a
+                  href='https://www.linkedin.com/in/mugilan-codes/'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
                   <i className='lab la-linkedin la-2x'></i>
                 </a>
               </li>
               <li className='hide-sm'>
-                <a href='https://www.instagram.com/mugilancodes/'>
+                <a
+                  href='https://www.instagram.com/mugilancodes/'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
                   <i className='lab la-instagram la-2x'></i>
                 </a>
               </li>
               <li>
-                <a href='https://github.com/Mugilan-Codes'>
+                <a
+                  href='https://github.com/Mugilan-Codes'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
                   <i className='lab la-github la-2x'></i>
                 </a>
               </li>
@@ -97,17 +111,29 @@ const About = () => {
 
             <ul>
               <li>
-                <a href='https://www.linkedin.com/in/nivethithaa-murugan-84ba4a194/'>
+                <a
+                  href='https://www.linkedin.com/in/nivethithaa-murugan-84ba4a194/'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
                   <i className='lab la-linkedin la-2x'></i>
                 </a>
               </li>
               <li className='hide-sm'>
-                <a href='https://www.instagram.com/krystelene_dizzona/'>
+                <a
+                  href='https://www.instagram.com/krystelene_dizzona/'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
                   <i className='lab la-instagram la-2x'></i>
                 </a>
               </li>
               <li>
-                <a href='https://github.com/Nivethithaa-M'>
+                <a
+                  href='https://github.com/Nivethithaa-M'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
                   <i className='lab la-github la-2x'></i>
                 </a>
               </li>
@@ -129,17 +155,17 @@ const About = () => {
 
             <ul>
               <li>
-                <a href='#!'>
+                <a href='#!' target='_blank' rel='noopener noreferrer'>
                   <i className='lab la-linkedin la-2x'></i>
                 </a>
               </li>
               <li className='hide-sm'>
-                <a href='#!'>
+                <a href='#!' target='_blank' rel='noopener noreferrer'>
                   <i className='lab la-instagram la-2x'></i>
                 </a>
               </li>
               <li>
-                <a href='#!'>
+                <a href='#!' target='_blank' rel='noopener noreferrer'>
                   <i className='lab la-github la-2x'></i>
                 </a>
               </li>
