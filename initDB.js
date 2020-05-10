@@ -25,7 +25,7 @@ const initDB = async () => {
     // console.log('admin Table Created');
 
     const createPatientTable =
-      'CREATE TABLE IF NOT EXISTS patient ( id uuid, name text, email varchar, addr varchar, dob date, gender text, phno int, pwd varchar, PRIMARY KEY ( email, id ) ) ;';
+      'CREATE TABLE IF NOT EXISTS patient ( id uuid, name text, email varchar, addr varchar, dob date, gender text, phno varchar, pwd varchar, PRIMARY KEY ( email, id ) ) ;';
     await client.execute(createPatientTable);
     // console.log('patient Table Created');
 

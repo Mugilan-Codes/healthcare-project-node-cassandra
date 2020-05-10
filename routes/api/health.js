@@ -137,7 +137,6 @@ router.post(
 router.post(
   '/patient/register',
   [
-    // @todo   Add More Checks for Registeration
     check('name', 'Patient Name is required').not().isEmpty(),
     check('dob', 'Date of Birth is required').not().isEmpty(),
     check('gender', 'Gender is required').not().isEmpty(),
@@ -152,8 +151,8 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    req.body.phno = Number(req.body.phno);
-    if (req.body.phno === 0) {
+    //* This is to make sure the phno is a valid phno
+    if (isNaN(Number(req.body.phno)) || Number(req.body.phno) === 0) {
       req.body.phno = null;
     }
 
